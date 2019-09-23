@@ -1,8 +1,7 @@
 from django.shortcuts import render
-from .models import Category, Brand 
-from .models import Shop
+from .models import Category, Brand, Shop, Invoice
 from rest_framework import viewsets, filters
-from .serializers import CategorySerializer, BrandSerializer, ShopSerializer
+from .serializers import CategorySerializer, BrandSerializer, ShopSerializer, InvoiceSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -23,3 +22,9 @@ class ShopViewSet(viewsets.ModelViewSet):
     serializer_class = ShopSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('shop_name', 'shop_owner', 'shop_address')
+
+class InvoiceViewSet(viewsets.ModelViewSet):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('invoice_transaction_id',)

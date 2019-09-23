@@ -1,5 +1,4 @@
-from .models import Category, Brand
-from .models import Shop
+from .models import Category, Brand , Shop, Invoice
 from rest_framework import serializers
 
 
@@ -23,3 +22,10 @@ class ShopSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Shop
         fields =   ['shop_id','shop_name', 'shop_owner', 'shop_address']
+
+class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
+    invoice_transaction_id = serializers.ReadOnlyField()
+    brand_id = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Brand.objects.all())
+    class Meta:
+        model = Invoice
+        fields =   ['invoice_transaction_id','brand_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_bottles','invoice_total']
