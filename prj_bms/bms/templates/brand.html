@@ -133,8 +133,8 @@
     <div id="starting">
       <div class="container">
         <div class="row">
-          <h1>List of Categorys
-          <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">ADD ARTICLE</button>
+          <h1>List of Brands
+          <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBrandModal">ADD ARTICLE</button>
           </h1>
           &emsp;
           <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
@@ -150,18 +150,33 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="category in categorys">
-                <th scope="row">${category.category_id}</th>
-                <td>${category.category_name}</td>
+              <tr v-for="brand in brands">
+                <th scope="row">${brand.brand_id}</th>
+                <td>${brand.brand_name}</td>
+				<td>${brand.brand_description}</td>
+				<td>${brand.brand_p_cost}</td>
+				<td>${brand.brand_q_cost}</td>
+				<td>${brand.brand_n_cost}</td>
+				<td>${brand.brand_d_cost}</td>
+				<td>${brand.brand_l_cost}</td>
+				<td>${brand.brand_xg_cost}</td>
+				<td>${brand.brand_y_cost}</td>
+				<td>${brand.brand_p_sale}</td>
+				<td>${brand.brand_q_sale}</td>
+				<td>${brand.brand_n_sale}</td>
+				<td>${brand.brand_d_sale}</td>
+				<td>${brand.brand_l_sale}</td>
+				<td>${brand.brand_xg_sale}</td>
+				<td>${brand.brand_y_sale}</td>
                 <td>
-                  <button class="btn btn-info" v-on:click="getCategory(category.category_id)">Edit</button>
-                  <button class="btn btn-danger" v-on:click="deleteCategory(category.category_id)">Delete</button>
+                  <button class="btn btn-info" v-on:click="getBrand(brand.brand_id)">Edit</button>
+                  <button class="btn btn-danger" v-on:click="deleteBrand(brand.brand_id)">Delete</button>
                 </td>
               </tr>
             </tbody>
           </table>
-          <!-- Add Category Modal -->
-          <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <!-- Add Brand Modal -->
+          <div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -170,25 +185,25 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form v-on:submit.prevent="addCategory()">
+                <form v-on:submit.prevent="addBrand()">
                 <div class="modal-body">
                     <div class="form-group">
-                      <label for="category_name">Category Heading</label>
+                      <label for="brand_name">Brand Heading</label>
                       <input
                         type="text"
                         class="form-control"
-                        id="category_name"
-                        placeholder="Enter Category Heading"
-                        v-model="newCategory.category_name"
+                        id="brand_name"
+                        placeholder="Enter Brand Heading"
+                        v-model="newBrand.brand_name"
                         required="required" >
                     </div>
                     <div class="form-group">
-                      <label for="category_description">Category Body</label>
+                      <label for="brand_description">Brand Body</label>
                       <textarea
                         class="form-control"
-                        id="category_description"
-                        placeholder="Enter Category Body"
-                        v-model="newCategory.category_description"
+                        id="brand_description"
+                        placeholder="Enter Brand Body"
+                        v-model="newBrand.brand_description"
                         required="required"
                         rows="3"></textarea>
                     </div>
@@ -202,9 +217,9 @@
             </div>
             <div class="loading" v-if="loading===true">Loading&#8230;</div>
           </div>
-          <!-- End of add category modal -->
-          <!-- Edit Category Modal -->
-          <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <!-- End of add brand modal -->
+          <!-- Edit Brand Modal -->
+          <div class="modal fade" id="editBrandModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -213,25 +228,25 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form v-on:submit.prevent="updateCategory()">
+                <form v-on:submit.prevent="updateBrand()">
                 <div class="modal-body">
                     <div class="form-group">
-                      <label for="category_name">Category Heading</label>
+                      <label for="brand_name">Brand Heading</label>
                       <input
                         type="text"
                         class="form-control"
-                        id="category_name"
-                        placeholder="Enter Category Heading"
-                        v-model="currentCategory.category_name"
+                        id="brand_name"
+                        placeholder="Enter Brand Heading"
+                        v-model="currentBrand.brand_name"
                         required="required" >
                     </div>
                     <div class="form-group">
-                      <label for="category_description">Category Body</label>
+                      <label for="brand_description">Brand Body</label>
                       <textarea
                         class="form-control"
-                        id="category_description"
-                        placeholder="Enter Category Body"
-                        v-model="currentCategory.category_description"
+                        id="brand_description"
+                        placeholder="Enter Brand Body"
+                        v-model="currentBrand.brand_description"
                         required="required"
                         rows="3"></textarea>
                     </div>
@@ -245,7 +260,7 @@
             </div>
             <div class="loading" v-if="loading===true">Loading&#8230;</div>
           </div>
-          <!-- End of edit category modal -->
+          <!-- End of edit brand modal -->
 
         </div>
       </div>
@@ -267,11 +282,11 @@
       el: '#starting',
       delimiters: ['${','}'],
       data: {
-        categorys: [],
+        brands: [],
         loading: true,
-        currentCategory: {},
+        currentBrand: {},
         message: null,
-        newCategory: { 'category_name': null, 'category_description': null },
+        newBrand: { 'brand_name': null, 'brand_description': null },
         search_term: '',
       },
       mounted: function() {
@@ -279,14 +294,14 @@
       },
       methods: {
         getCategories: function() {
-          let api_url = '/api/category/';
+          let api_url = '/api/brand/';
           if(this.search_term!==''||this.search_term!==null) {
-            api_url = `/api/category/?search=${this.search_term}`;
+            api_url = `/api/brand/?search=${this.search_term}`;
           }
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {
-                this.categorys = response.data;
+                this.brands = response.data;
                 this.loading = false;
               })
               .catch((err) => {
@@ -294,13 +309,13 @@
                 console.log(err);
               })
         },
-        getCategory: function(id) {
+        getBrand: function(id) {
           this.loading = true;
-          this.$http.get(`/api/category/${id}/`)
+          this.$http.get(`/api/brand/${id}/`)
               .then((response) => {
-                this.currentCategory = response.data;
+                this.currentBrand = response.data;
                 console.log(response.data);
-                $("#editCategoryModal").modal('show');
+                $("#editBrandModal").modal('show');
                 this.loading = false;
               })
               .catch((err) => {
@@ -308,9 +323,9 @@
                 console.log(err);
               })
         },
-        addCategory: function() {
+        addBrand: function() {
           this.loading = true;
-          this.$http.post(`/api/category/`,this.newCategory)
+          this.$http.post(`/api/brand/`,this.newBrand)
               .then((response) => {
                 this.loading = true;
                 this.getCategories();
@@ -320,12 +335,12 @@
                 console.log(err);
               })
         },
-        updateCategory: function() {
+        updateBrand: function() {
           this.loading = true;
-          this.$http.put(`/api/category/${this.currentCategory.category_id}/`, this.currentCategory)
+          this.$http.put(`/api/brand/${this.currentBrand.brand_id}/`, this.currentBrand)
               .then((response) => {
                 this.loading = false;
-                this.currentCategory = response.data;
+                this.currentBrand = response.data;
                 this.getCategories();
               })
               .catch((err) => {
@@ -333,9 +348,9 @@
                 console.log(err);
               })
         },
-        deleteCategory: function(id) {
+        deleteBrand: function(id) {
           this.loading = true;
-          this.$http.delete(`/api/category/${id}/`)
+          this.$http.delete(`/api/brand/${id}/`)
               .then((response) => {
                 this.loading = false;
                 this.getCategories();
