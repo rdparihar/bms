@@ -15,8 +15,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class BrandViewSet(viewsets.ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
-
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('brand_id', 'brand_name', 'brand_description')
 
 class ShopViewSet(viewsets.ModelViewSet):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('shop_name', 'shop_owner', 'shop_address')
