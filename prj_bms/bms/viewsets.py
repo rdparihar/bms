@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Category, Brand, Shop, Invoice, Quantity
+from .models import Category, Brand, Shop, Invoice, Quantity, Shift
 from rest_framework import viewsets, filters
-from .serializers import CategorySerializer, BrandSerializer, ShopSerializer, InvoiceSerializer, QuantitySerializer
+from .serializers import CategorySerializer, BrandSerializer, ShopSerializer, InvoiceSerializer, QuantitySerializer, ShiftSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -34,3 +34,9 @@ class QuantityViewSet(viewsets.ModelViewSet):
     serializer_class = QuantitySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('quantity_name', 'quantity_bottles')
+
+class ShiftViewSet(viewsets.ModelViewSet):
+    queryset = Shift.objects.all()
+    serializer_class = ShiftSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('brand_id','stock_shift_date','stock_shift_from','stock_shift_to')

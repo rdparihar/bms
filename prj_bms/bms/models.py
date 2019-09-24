@@ -89,3 +89,24 @@ class Quantity(models.Model):
 
     def __str__(self):
          return str(self.quantity_name)
+
+class Shift(models.Model):
+    brand_id = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    stock_shift_date = models.DateField(verbose_name = 'Stock Shift Date')
+    stock_shift_from = models.IntegerField(verbose_name = 'Stock Shift From Shop')
+    stock_shift_to = models.ForeignKey(Shop, on_delete=models.CASCADE, verbose_name = 'Stock Shift To Shop')
+    stock_shift_p = models.IntegerField(verbose_name = 'Stock Shift P')
+    stock_shift_q = models.IntegerField(verbose_name = 'Stock Shift Q')
+    stock_shift_n = models.IntegerField(verbose_name = 'Stock Shift N')
+    stock_shift_d = models.IntegerField(verbose_name = 'Stock Shift D')
+    stock_shift_l = models.IntegerField(verbose_name = 'Stock Shift L')
+    stock_shift_xg = models.IntegerField(verbose_name = 'Stock Shift XG')
+    stock_shift_y = models.IntegerField(verbose_name = 'Stock Shift Y')
+
+    class Meta:
+        verbose_name = 'Shift'
+        verbose_name_plural = 'Shifts'
+        ordering = ["stock_shift_date"]
+
+    def __str__(self):
+         return str(self.stock_shift_date)
