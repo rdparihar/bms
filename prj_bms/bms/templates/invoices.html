@@ -233,7 +233,18 @@
                                             required="required" >
                                         </div>
 
+
+
+
+
+                                        <div class="form-group">
+                                            <label for="category_id">category ID</label>
+                                            <select v-model="newInvoice.category_id" name="newInvoice.category_id" class="form-control" @change="getBrands()">
+                                              <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
+                                            </select>
+                                          </div>
                                       
+                                        
                                         <div class="form-group">
                                           <label for="brand_id">Brand ID</label>
                                           
@@ -242,6 +253,11 @@
                                           </select>
                                         
                                         </div>
+
+
+
+
+
                                        <div class="form-group">
                                           <label for="invoice_brand_size">Brand Size</label>
                                           <input
@@ -436,6 +452,7 @@
       data: {
         invoices: [],
         brands:[],
+        categories:[],
         loading: true,
         currentInvoice: {},
         message: null,
@@ -444,6 +461,7 @@
       },
       mounted: function() {
         this.getInvoices();
+        this.getCategories();
         this.getBrands();
       },
       methods: {
@@ -463,8 +481,22 @@
                 console.log(err);
               })
         },
-        getBrands: function() {
+        getCategories: function() {
+          let api_url = '/api/category/';
+         this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.categories = response.data;
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        getBrands: function (){
           let api_url = '/api/brand/';
+          api_url = `/api/brand/?search=${this.newInvoice.category_id}`;
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {

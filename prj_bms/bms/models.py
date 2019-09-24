@@ -64,6 +64,7 @@ class Invoice(models.Model):
     invoice_transaction_id = models.IntegerField(primary_key=True, verbose_name = 'Invoice Id')
     brand_id = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category_id = models.IntegerField(verbose_name = 'Category Id')
     invoice_brand_size = models.CharField(max_length=5, verbose_name = 'Brand Size')
     invoice_brand_qty = models.IntegerField(verbose_name = 'Brand Quantity')
     invoice_rate_per_case = models.DecimalField(max_digits=22, decimal_places=2,default=Decimal(0.00))
