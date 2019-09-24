@@ -27,7 +27,7 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
     brand_id = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Brand.objects.all())
     class Meta:
         model = Invoice
-        fields =   ['invoice_transaction_id','brand_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_bottles','invoice_total']
+        fields =   ['invoice_transaction_id','brand_id','category_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_bottles','invoice_total']
 
 class QuantitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
