@@ -169,7 +169,7 @@
                           <div class="container">
                             <div class="row">
                               <h1>
-                                <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addInvoiceModal">Nes Stock</button>
+                                <button  type="button" class="btn btn-success" data-toggle="modal" data-target="#addInvoiceModal">New Stock</button>
                               </h1>
                               &emsp;
                               <div class="form-inline my-2 my-lg-0" style="margin-left: 50%;">
@@ -211,11 +211,11 @@
                               </table>
                            
                               <!-- Add Invoice Modal -->
-                              <div class="modal fade" id="addInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
+                              <div class="modal fade " id="addInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLongTitle">ADD Invoice</h5>
+                                      <h5 class="modal-title" id="exampleModalLongTitle">ADD Stock</h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                       </button>
@@ -233,43 +233,33 @@
                                             required="required" >
                                         </div>
 
-
-
-
-
-                                        <div class="form-group">
-                                            <label for="category_id">category ID</label>
-                                            <select v-model="newInvoice.category_id" name="newInvoice.category_id" class="form-control" @change="getBrands()">
-                                              <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
-                                            </select>
-                                          </div>
-                                      
-                                        
-                                        <div class="form-group">
-                                          <label for="brand_id">Brand ID</label>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="category_id">category ID</label>
+                                                <select v-model="newInvoice.category_id" name="newInvoice.category_id" class="form-control" @change="getBrands()">
+                                                  <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for="brand_id">Brand ID</label>
                                           
-                                          <select v-model="newInvoice.brand_id" class="form-control" >
-                                            <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
-                                          </select>
-                                        
-                                        </div>
-
-
-
-
-
-                                       <div class="form-group">
+                                                <select v-model="newInvoice.brand_id" class="form-control" >
+                                                  <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
+                                                </select>
+                                            </div>
+                                          </div>
+                                          <div class="row">
+                                       <div class="col">
                                           <label for="invoice_brand_size">Brand Size</label>
-                                          <input
-                                            type="text"
-                                            class="form-control"
-                                            id="invoice_brand_size"
-                                            placeholder="Brand Size"
-                                            v-model="newInvoice.invoice_brand_size"
-                                            required="required"
-                                            rows="3">
+                                          <select v-model="newInvoice.brand_id" class="form-control" >
+                                            <option  
+                                            v-for="bsize in brandsSize" 
+                                            :value="bsize.quantity_name">${bsize.quantity_name} - ${bsize.quantity_bottles}</option>
+                                          </select>
+                                          
                                         </div>
-                                        <div class="form-group">
+                                        
+                                        <div class="col">
                                           <label for="invoice_brand_qty">Brand Qty</label>
                                           <input
                                             type="text"
@@ -280,18 +270,22 @@
                                             required="required"
                                             rows="3">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="col">
                                           <label for="invoice_rate_per_case">Rate</label>
+                                          <p>
+                                              <input type="text" v-model="newInvoice.invoice_rate_per_case">
+                                              ${rate} 
+                                            </p>
                                           <input
                                             type="text"
                                             id="invoice_rate_per_case"
                                             class="form-control"
                                             placeholder="Rate"
+                                            value="rate"
                                             v-model="newInvoice.invoice_rate_per_case"
-                                            required="required"
-                                            rows="3">
+                                            rows="3" > 
                                         </div>
-                                        <div class="form-group">
+                                        <div class="col">
                                           <label for="invoice_no_of_bottles">No.of Bottles</label>
                                           <input
                                             type="text"
@@ -302,7 +296,7 @@
                                             required="required"
                                             rows="3">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="col">
                                           <label for="invoice_total">Total</label>
                                           <input
                                             type="text"
@@ -313,7 +307,9 @@
                                             required="required"
                                             rows="3">
                                         </div>
-                                    </div>
+                                   
+                                      </div>
+                                      </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
                                       <button type="submit" class="btn btn-primary">Save changes</button>
@@ -452,8 +448,11 @@
       data: {
         invoices: [],
         brands:[],
+        brandsSize:[],
         categories:[],
         loading: true,
+        x:[],
+        rate: 80,
         currentInvoice: {},
         message: null,
         newInvoice: { 'invoice_transaction_id': null, 'invoice_description': null },
@@ -463,6 +462,7 @@
         this.getInvoices();
         this.getCategories();
         this.getBrands();
+        this.getBrandsSize();
       },
       methods: {
         getInvoices: function() {
@@ -501,6 +501,25 @@
           this.$http.get(api_url)
               .then((response) => {
                 this.brands = response.data;
+               // var data = this.responseData.DATA
+                this.x = response.data;
+
+                console.log(this.x.brand_p_cost);
+                //this.rate = brands.brand_p_cost;
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        getBrandsSize: function (){
+          let api_url = '/api/quantity/';
+          // api_url = `/api/brand/?search=${this.newInvoice.category_id}`;
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.brandsSize = response.data;
                 this.loading = false;
               })
               .catch((err) => {
