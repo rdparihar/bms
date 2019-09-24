@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
   {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
     <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
   </head>
 
@@ -89,17 +90,86 @@
                   </div>
               </nav>
               <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                      {% block page_nav %}
+                {% block page_nav %}
+                    <ul class="nav nav-pills ">
+                      <h3>Stock Entries</h3>
+                      </ul>{% endblock %}
+                {% block content %}
+                
+                <div id="app">
+                    <div class="container">
+                      <div class="row">
+                    
+                        <div class="invoice-box">
+                          <table cellpadding="0" cellspacing="0">
+                            <tr class="top">
+                              <td colspan="4">
+                                <table>
+                                  <tr>
+                                    <td class="title"><h3>NAME OF THE SHOP </h3>                                    </td>
+                        
+                                   
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                        
+                          
+                            <tr class="heading">
+                              <td colspan="3">Payment Method</td>
+                              <td>Check #</td>
+                            </tr>
+                        
+                            <tr class="details">
+                              <td colspan="3">Check</td>
+                              <td>1000</td>
+                            </tr>
+                        
+                            <tr class="heading">
+                              <td>Item</td>
+                              <td>Unit Cost</td>
+                              <td>Quantity</td>
+                              <td>Price</td>
+                            </tr>
+                            <tr class="item" v-for="item in items">
+                              <td><input v-model="item.description" /></td>
+                              <td>$<input type="number" v-model="item.price" /></td>
+                              <td><input type="number" v-model="item.quantity" /></td>
+                              
+                              <td>${ item.price } </td>
+                            </tr>
+                        
+                            <tr>
+                              <td colspan="4">
+                                <button class="btn-add-row" @click="addRow">Add row</button>
+                              </td>
+                            </tr>
+                        
+                            <tr class="total">
+                              <td colspan="3"></td>
+                              <td>Total: ${ total | currency }</td>
+                            </tr>
+                          </table>
+                        </div>
+                        
+                       
+              
+                      </div>
+                    </div>
+              
+                  </div>
+                {% endblock %}
+        </main>
+              <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                           <ul class="nav nav-pills ">
-                            <h3>Stock Entries</h3>
-                            </ul>{% endblock %}
-                      {% block content %}
+                            <h3>Stock List</h3>
+                            </ul>
                       
                       <div id="starting">
                           <div class="container">
                             <div class="row">
                               <h1>
-                              <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addInvoiceModal">Nes Stock</button>
+                                <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addInvoiceModal">Nes Stock</button>
                               </h1>
                               &emsp;
                               <div class="form-inline my-2 my-lg-0" style="margin-left: 50%;">
@@ -139,6 +209,7 @@
                                   </tr>
                                 </tbody>
                               </table>
+                           
                               <!-- Add Invoice Modal -->
                               <div class="modal fade" id="addInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -165,8 +236,9 @@
                                       
                                         <div class="form-group">
                                           <label for="brand_id">Brand ID</label>
+                                          
                                           <select v-model="newInvoice.brand_id" class="form-control" >
-                                            <option  v-for = "invoice in invoices" selected>${invoice.brand_id}</option>
+                                            <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
                                           </select>
                                         
                                         </div>
@@ -335,8 +407,7 @@
                           <div class="loading" v-if="loading===true">Loading&#8230;</div>
                     
                         </div>
-                      {% endblock %}
-                  </main>
+              </main>
 
 
 
@@ -364,6 +435,7 @@
       delimiters: ['${','}'],
       data: {
         invoices: [],
+        brands:[],
         loading: true,
         currentInvoice: {},
         message: null,
@@ -372,6 +444,7 @@
       },
       mounted: function() {
         this.getInvoices();
+        this.getBrands();
       },
       methods: {
         getInvoices: function() {
@@ -390,6 +463,20 @@
                 console.log(err);
               })
         },
+        getBrands: function() {
+          let api_url = '/api/brand/';
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.brands = response.data;
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        
         getInvoice: function(id) {
           this.loading = true;
           this.$http.get(`/api/invoice/${id}/`)
@@ -443,6 +530,37 @@
         }
       }
     });
+
+
+    const app = new Vue({
+  el: '#app',
+  data: {
+    items: [
+      { description: "Website design", quantity: 1, price: 300 },
+      { description: "Website design", quantity: 1, price: 75 },
+      { description: "Website design", quantity: 1, price: 10 }
+    ]
+  },
+  computed: {
+    total() {
+      return this.items.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      );
+    }
+  },
+  methods: {
+    addRow() {
+      this.items.push({ description: "", quantity: 1, price: 0 });
+    }
+  },
+  filters: {
+    currency(value) {
+      return value.toFixed(2);
+    }
+  }
+});
+
   </script>
   </body>
 </html>
