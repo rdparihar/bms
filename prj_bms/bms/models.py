@@ -75,3 +75,15 @@ class Invoice(models.Model):
 
     def __str__(self):
          return str(self.invoice_transaction_id)
+
+class Quantity(models.Model):
+    quantity_name = models.CharField(primary_key=True,max_length=4, verbose_name = 'Quantity Name')
+    quantity_bottles = models.IntegerField(verbose_name = 'Quantity bottles')
+
+    class Meta:
+        verbose_name = 'Quantity'
+        verbose_name_plural = 'Quantities'
+        ordering = ["quantity_name"]
+
+    def __str__(self):
+         return str(self.quantity_name)

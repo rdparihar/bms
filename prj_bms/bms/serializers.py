@@ -1,10 +1,9 @@
-from .models import Category, Brand , Shop, Invoice
+from .models import Category, Brand , Shop, Invoice, Quantity
 from rest_framework import serializers
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     category_id = serializers.ReadOnlyField()
-
     class Meta:
         model = Category
         fields = ['category_id','category_name','category_description']
@@ -29,3 +28,8 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Invoice
         fields =   ['invoice_transaction_id','brand_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_bottles','invoice_total']
+
+class QuantitySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Quantity
+        fields = ['quantity_name','quantity_bottles']

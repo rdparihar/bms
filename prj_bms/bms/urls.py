@@ -8,5 +8,6 @@ urlpatterns = [
     path('brand/', TemplateView.as_view(template_name='brand.html'), name="brand"),
     path('shop/', TemplateView.as_view(template_name='shop.html'), name="shop"),
     path('invoice/', TemplateView.as_view(template_name='invoices.html'), name="invoice"),
+    path('quantity/', TemplateView.as_view(template_name='quantities.html'), name="quantity"),
     
 ]
