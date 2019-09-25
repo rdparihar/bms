@@ -54,7 +54,7 @@ class Brand(models.Model):
 	
     class Meta:
         verbose_name = 'Brand'
-        verbose_name_plural = 'Brand'
+        verbose_name_plural = 'Brands'
         ordering = ["brand_id"]
 
     def __str__(self):
