@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Category, Brand, Shop, Invoice, Quantity, Shift
 from rest_framework import viewsets, filters
+# from django_filters.rest_framework import DjangoFilterBackend
+
 from .serializers import CategorySerializer, BrandSerializer, ShopSerializer, InvoiceSerializer, QuantitySerializer, ShiftSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -20,7 +22,9 @@ class BrandViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('brand_id', 'brand_name', 'brand_description')
+    # search_fields = ('brand_id',)
+    search_fields = ['category_id__category_id',]
+   
 
 
 class ShopViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
@@ -35,7 +39,9 @@ class InvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('invoice_transaction_id',)
+    # filter_backends = (filters.DjangoFilterBackend,)
+    # filter_fields = ('category_id')
+    search_fields = ('category_id')
 
 class QuantityViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
