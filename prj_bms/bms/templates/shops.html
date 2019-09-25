@@ -15,7 +15,7 @@
 
   <body>
       <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-          <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">I Management System</a>
+          <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'home' %}">I Management System</a>
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
               <a class="nav-link" href="#">Sign out</a>
@@ -30,21 +30,21 @@
                   <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                       <li class="nav-item">
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link active" href="{% url 'home' %}">
                           <span data-feather="home"></span>
                           Main <span class="sr-only">(current)</span>
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'invoice' %}">
                           <span data-feather="file"></span>
                           Invoice
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'category' %}">
                           <span data-feather="shopping-cart"></span>
-                          Expense
+                          category
                         </a>
                       </li>
                       <li class="nav-item">
@@ -60,7 +60,7 @@
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'invoice' %}">
                           <span data-feather="layers"></span>
                           Invoice
                         </a>
