@@ -12,6 +12,7 @@
   <body>
     <div id="starting">
       <div class="container">
+      
         <div class="row">
           <h1>List of Categorys
           <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">ADD ARTICLE</button>
@@ -35,11 +36,14 @@
                 <td>${category.category_name}</td>
                 <td>
                   <button class="btn btn-info" v-on:click="getCategory(category.category_id)">Edit</button>
+                  {% if perms.category.can_delete_category %}
                   <button class="btn btn-danger" v-on:click="deleteCategory(category.category_id)">Delete</button>
+                      {% endif %}
                 </td>
               </tr>
             </tbody>
           </table>
+
           <!-- Add Category Modal -->
           <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -83,6 +87,7 @@
             <div class="loading" v-if="loading===true">Loading&#8230;</div>
           </div>
           <!-- End of add category modal -->
+  
           <!-- Edit Category Modal -->
           <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">

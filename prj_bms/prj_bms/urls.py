@@ -17,11 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from .routers import router
 from django.views.generic import TemplateView
+from django.contrib.auth import views
+from django.conf.urls import url
+
+
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('bms.urls'), name= 'bms'),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('accounts/', include('django.contrib.auth.urls'), name='account'),
+    path('login/', include('django.contrib.auth.urls'), name='login'),
+    path('logout/', include('django.contrib.auth.urls'), name='logout'),
 ]
