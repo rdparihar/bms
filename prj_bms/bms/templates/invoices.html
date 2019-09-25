@@ -15,80 +15,12 @@
   </head>
 
   <body>
-      <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-          <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'home' %}">I Management System</a>
-          <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-              <a class="nav-link" href="#">Sign out</a>
-            </li>
-            
-          </ul>
-      </nav>
+      {% include 'topenavbar.html' %}
 
       <div class="container-fluid">
           <div class="row">
-              <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                  <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-                      <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">
-                          <span data-feather="home"></span>
-                          Main <span class="sr-only">(current)</span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">
-                          <span data-feather="file"></span>
-                          Invoice
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">
-                          <span data-feather="shopping-cart"></span>
-                          Expense
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">
-                          <span data-feather="users"></span>
-                          Manage User
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">
-                          <span data-feather="bar-chart-2"></span>
-                          Reports
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">
-                          <span data-feather="layers"></span>
-                          Invoice
-                        </a>
-                      </li>
-                    </ul>
-        
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                      <span>Saved reports</span>
-                      
-                    </h6>
-                    <ul class="nav flex-column mb-2">
-                      <li class="nav-item">
-                        <a class="nav-link" href="">
-                          <span data-feather="file-text"></span>
-                          Stocks Categories
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="">
-                          <span data-feather="file-text"></span>
-                          Create Categories
-                        </a>
-                      </li>
-      
-                    </ul>
-                  </div>
-              </nav>
+              {% include 'sidenavbar.html' %}
+              
               <!-- <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                 {% block page_nav %}
                     <ul class="nav nav-pills ">
@@ -442,14 +374,7 @@
         this.getRates();
       },
       computed: {
-        // a computed getter
-        reversedMessage: function ()
-        {
-          // `this` points to the vm instance
-          return this.message.split('').reverse().join('')
-          },
-        
-          getRates: function(){
+        getRates: function(){
           var x =this.newInvoice.brand_id;
           var marvelHeroes = this.brands.filter(function(bd) {
             if (bd.brand_id==x) {
