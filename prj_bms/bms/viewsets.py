@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from django.conf import settings
 
 
+
 class CategoryViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
     queryset = Category.objects.all().order_by('category_id')

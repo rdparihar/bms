@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 
+
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     category_id = serializers.ReadOnlyField()
     class Meta:
