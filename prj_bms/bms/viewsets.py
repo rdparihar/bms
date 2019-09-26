@@ -45,15 +45,6 @@ class ShopViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('shop_name', 'shop_owner', 'shop_address', 'shop_admin')
 
-class InvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
-    login_url = settings.LOGIN_REDIRECT_URL
-    queryset = Invoice.objects.all()
-    serializer_class = InvoiceSerializer
-    filter_backends = (filters.SearchFilter,)
-    # filter_backends = (filters.DjangoFilterBackend,)
-    # filter_fields = ('category_id')
-    search_fields = ('category_id')
-
 class QuantityViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
     queryset = Quantity.objects.all()
@@ -68,3 +59,9 @@ class ShiftViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('brand_id','stock_shift_date','stock_shift_from','stock_shift_to')
 
+class InvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
+    login_url = settings.LOGIN_REDIRECT_URL
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('category_id')
