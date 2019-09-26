@@ -12,7 +12,5 @@ urlpatterns = [
     path('invoice/', TemplateView.as_view(template_name='invoices.html'), name="invoice"),
     path('quantity/', TemplateView.as_view(template_name='quantities.html'), name="quantity"),
     path('shift/', TemplateView.as_view(template_name='shifts.html'), name="shift"),
-    path('account/', TemplateView.as_view(template_name='registration/login.html'), name="account"),
-
-    
+    path('account/', TemplateView.as_view(template_name='registration/login.html'), name="account"),    
 ]

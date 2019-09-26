@@ -1,19 +1,6 @@
 from django.db import models
 from decimal import Decimal
-
-# models for shop
-class Shop(models.Model):
-    shop_id = models.IntegerField(primary_key=True, verbose_name = 'Shop Id')
-    shop_name = models.CharField(max_length=200, verbose_name = 'Shop Name')
-    shop_owner = models.CharField(max_length=200, verbose_name = 'Shop owner')
-    shop_address = models.CharField(max_length=200, verbose_name = 'Shop Address')
-	
-    class Meta:
-        verbose_name = 'Shop'
-        verbose_name_plural = 'Shop'
-        ordering = ["shop_id"]
-    def __str__(self):
-        return str(self.shop_name)
+from django.contrib.auth.models import User
 
 
 # models for stocks 
@@ -27,6 +14,7 @@ class Category(models.Model):
         verbose_name = 'Category'
         verbose_name_plural = 'Category'
         ordering = ["category_id"]
+        permissions = (("can_see_category", "Can see category"),) 
 
     def __str__(self):
          return str(self.category_name)
@@ -63,7 +51,6 @@ class Brand(models.Model):
 class Invoice(models.Model):
     invoice_transaction_id = models.IntegerField(primary_key=True, verbose_name = 'Invoice Id')
     brand_id = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
     category_id = models.IntegerField(verbose_name = 'Category Id')
     invoice_brand_size = models.CharField(max_length=5, verbose_name = 'Brand Size')
     invoice_brand_qty = models.IntegerField(verbose_name = 'Brand Quantity')
@@ -89,6 +76,36 @@ class Quantity(models.Model):
 
     def __str__(self):
          return str(self.quantity_name)
+
+class BmsUser(models.Model):
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.IntegerField(primary_key=True, verbose_name = 'User Id')
+    user_first_name = models.CharField(max_length=50, verbose_name = 'First Name')
+    user_last_name = models.CharField(max_length=50, verbose_name = 'Last Name')
+    user_role = models.IntegerField(verbose_name = 'User Role')
+
+    class Meta:
+        verbose_name = 'Bms User'
+        verbose_name_plural = 'Bms User'
+        ordering = ["-user_id"]
+
+    def __str__(self):
+         return str(self.username)
+
+# models for shop
+class Shop(models.Model):
+    shop_id = models.IntegerField(primary_key=True, verbose_name = 'Shop Id')
+    shop_name = models.CharField(max_length=200, verbose_name = 'Shop Name')
+    shop_owner = models.CharField(max_length=200, verbose_name = 'Shop owner')
+    shop_address = models.CharField(max_length=200, verbose_name = 'Shop Address')
+    shop_admin = models.ForeignKey(BmsUser, on_delete=models.CASCADE)
+	
+    class Meta:
+        verbose_name = 'Shop'
+        verbose_name_plural = 'Shop'
+        ordering = ["shop_id"]
+    def __str__(self):
+        return str(self.shop_name)
 
 class Shift(models.Model):
     brand_id = models.ForeignKey(Brand, on_delete=models.CASCADE)
