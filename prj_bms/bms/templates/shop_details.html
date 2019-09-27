@@ -161,14 +161,22 @@
                                 <h3>Stock Shifting  : </h3>
                             </ul>
                             <div class="modal-body invoice-box ">
-                                <form v-on:submit.prevent="addShift()">                                    
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="brand_id">Choose Brand</label>
-                                            <select v-model.number="newShift.brand_id" name="newShift.brand_id" class="form-control" @change="getBrands()">
-                                                <option v-for="brand in brands" :value="brand.brand_id">${brand.brand_name} </option>   
-                                            </select>
-                                        </div>
+                                <form v-on:submit.prevent="addShift()">     
+                                        <div class="row">
+                                                <div class="col">
+                                                    <label for="category_id">category ID</label>
+                                                    <select v-model.number="newShift.category_id" name="newShift.category_id" class="form-control" @change="getBrands()">
+                                                      <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="brand_id">Brand ID</label>
+                                                    <select v-model.number="newShift.brand_id" name="newShift.brand_id"
+                                                      class="form-control" @change="getRates()">
+                                                      <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
+                                                    </select>
+                                                </div>
+                                                
                                         <div class="col">
                                                 <label for="stock_shift_date">Enter the Date</label>
                                                 <input
@@ -179,7 +187,10 @@
                                                     placeholder="Enter the Date"
                                                     v-model="newShift.stock_shift_date"
                                                     required="required" >
-                                            </div>  
+                                            </div> 
+                                              </div>                               
+                                    <div class="row">
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="col">
@@ -640,25 +651,42 @@
         search_term: '',
       },
       mounted: function() {
+          this.getCategories();
           this.getBrands();
           this.getShops();
         
       },
 
       methods: {
-          getBrands: function() {
-              let api_url = '/api/brand/';
-              this.loading = true;
-              this.$http.get(api_url)
-              .then((response) => {
-                  this.brands = response.data;
-                  this.loading = false;
+     
+            getCategories: function() {
+                let api_url = '/api/category/';
+                this.loading = true;
+                 this.$http.get(api_url)
+                .then((response) => {
+                    this.categories = response.data;
+                    this.loading = false;
               })
               .catch((err) => {
-                  this.loading = false;
-                  console.log(err);
-                })
-            },
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        getBrands: function (){
+          let api_url = '/api/brand/';
+          api_url = `/api/brand/?search=${this.newShift.category_id}`;
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.brands = response.data;
+                this.loading = false;
+              
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
             getShops: function() {
               let api_url = '/api/shop/';
               this.loading = true;
