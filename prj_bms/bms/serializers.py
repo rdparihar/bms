@@ -1,6 +1,7 @@
 from .models import Category, Brand , Shop, Invoice, Quantity, Shift,BmsUser
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import StockOpen
 
 class ReadCategorySerializer(serializers.HyperlinkedModelSerializer):
     category_id = serializers.ReadOnlyField()
@@ -108,3 +109,18 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Invoice
         fields =   ['invoice_transaction_id','shop_id','brand_id','category_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_bottles','invoice_total']
+
+
+class ReadStockOpenSerializer(serializers.HyperlinkedModelSerializer):
+    brand_id = BrandSerializer()
+    open_shop_id = ShopSerializer()
+    class Meta:
+        model = StockOpen
+        fields = ['brand_id','open_shop_id','open_date','open_p','open_q','open_n','open_d','open_l','open_xg','open_y']
+
+class StockOpenSerializer(serializers.HyperlinkedModelSerializer):
+    brand_id =  serializers.PrimaryKeyRelatedField(read_only=False, queryset=Brand.objects.all())
+    open_shop_id =  serializers.PrimaryKeyRelatedField(read_only=False, queryset=Shop.objects.all())
+    class Meta:
+        model = StockOpen
+        fields = ['brand_id','open_shop_id','open_date','open_p','open_q','open_n','open_d','open_l','open_xg','open_y']

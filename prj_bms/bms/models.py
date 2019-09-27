@@ -129,3 +129,23 @@ class Invoice(models.Model):
 
     def __str__(self):
          return str(self.invoice_transaction_id)
+
+class StockOpen(models.Model):
+    brand_id = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    open_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE, verbose_name = 'Stock Open Shop')
+    open_date = models.DateField(verbose_name = 'Stock Open Date')
+    open_p = models.IntegerField(verbose_name = 'Stock Open P')
+    open_q = models.IntegerField(verbose_name = 'Stock Open Q')
+    open_n = models.IntegerField(verbose_name = 'Stock Open N')
+    open_d = models.IntegerField(verbose_name = 'Stock Open D')
+    open_l = models.IntegerField(verbose_name = 'Stock Open L')
+    open_xg = models.IntegerField(verbose_name = 'Stock Open XG')
+    open_y = models.IntegerField(verbose_name = 'Stock Open Y')
+
+    class Meta:
+        verbose_name = 'StockOpen'
+        verbose_name_plural = 'StockOpens'
+        ordering = ["open_date"]
+
+    def __str__(self):
+         return str(self.open_date)

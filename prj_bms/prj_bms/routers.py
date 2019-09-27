@@ -1,6 +1,7 @@
 from rest_framework import routers
 from bms.viewsets import CategoryViewSet, BrandViewSet, ShopViewSet, InvoiceViewSet, QuantityViewSet, ShiftViewSet
 from bms.viewsets import BmsUserViewSet,UserViewSet
+from bms.viewsets import StockOpenViewSet
 
 router = routers.DefaultRouter()
 router.register(r'category', CategoryViewSet)
@@ -11,4 +12,6 @@ router.register(r'quantity', QuantityViewSet)
 router.register(r'shift', ShiftViewSet)
 router.register(r'user', UserViewSet)
 router.register(r'bmsuser', BmsUserViewSet)
+
+router.register(r'open', StockOpenViewSet)
 

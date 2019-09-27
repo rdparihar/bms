@@ -7,7 +7,7 @@ urlpatterns = [
     # path('', views.IndexView.as_view()),
     path('', TemplateView.as_view(template_name='shops.html'), name="home"),
     path('category/', TemplateView.as_view(template_name='categories.html'), name="category"),
-    path('brand/', TemplateView.as_view(template_name='brand.html'), name="brand"),
+    path('brand/', TemplateView.as_view(template_name='brands.html'), name="brand"),
     # path('brand/(?<id>.+)/$', TemplateView.as_view(template_name='brand.html'), name="brand"),
     path('stock/', views.ShopListView.as_view(), name='stock'),
     path('stock/<int:pk>', views.ShopDetailView.as_view(), name='stock-detail'),

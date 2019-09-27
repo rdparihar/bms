@@ -11,6 +11,9 @@ from .serializers import ReadBmsUserSerializer , ReadUserSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.conf import settings
+from .models import StockOpen
+from .serializers import StockOpenSerializer , ReadStockOpenSerializer
+
 
 
 
@@ -122,3 +125,18 @@ class InvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('category_id')
+
+
+class StockOpenViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
+    login_url = settings.LOGIN_REDIRECT_URL
+    queryset = StockOpen.objects.all()
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ReadStockOpenSerializer
+        elif self.request.method == 'POST':
+            return StockOpenSerializer
+        else:
+            return ReadStockOpenSerializer
+    serializer_class = StockOpenSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('brand_id','open_shop_id','open_date')
