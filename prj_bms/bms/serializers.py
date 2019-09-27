@@ -61,14 +61,14 @@ class ReadBmsUserSerializer(serializers.HyperlinkedModelSerializer):
         model = BmsUser
         fields = ['username','user_id','user_first_name','user_last_name','user_role']
 
-class ShopSerializer(serializers.HyperlinkedModelSerializer):
+class ReadShopSerializer(serializers.HyperlinkedModelSerializer):
     shop_id = serializers.ReadOnlyField()
     shop_admin = BmsUserSerializer()
     class Meta:
         model = Shop
         fields =   ['shop_id','shop_name', 'shop_owner', 'shop_address','shop_admin']
 
-class ReadShopSerializer(serializers.HyperlinkedModelSerializer):
+class ShopSerializer(serializers.HyperlinkedModelSerializer):
     shop_id = serializers.ReadOnlyField()
     shop_admin = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Shop.objects.all())
     class Meta:
