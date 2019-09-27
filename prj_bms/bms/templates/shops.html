@@ -132,10 +132,15 @@
                                     <th scope="col">Action</th>
                                   </tr>
                                 </thead>
+
+
+
                                 <tbody>
+
+                          
                                   <tr v-for="shop in shops">
                                     <th scope="row">${shop.shop_id}</th>
-                                    <td><a href="#">${shop.shop_name}</a> </td>
+                                    <td><a href="{% url 'invoice' %}">${shop.shop_name}</a> </td>
                                     <td>${shop.shop_owner}</td>
                                     <td>${shop.shop_address}</td>
                                     <td>${shop.shop_admin.username.username}</td>

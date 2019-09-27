@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -21,11 +22,40 @@
 
           {% include 'sidenavbar.html' %}
          
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          
+              <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                  
+                          <div class="card-header">
+    
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="p-2 ">
+                                      <ul class="nav nav-pills" role="tablist">
+                                       
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#home">Stock Entry</a>
+                                          </li>
+                                        <li class="nav-item">
+                                          <a class="nav-link" data-toggle="tab" href="#menu1">Stock Shifting</a>
+                                        </li>
+                                        <li class="nav-item">
+                                          <a class="nav-link" data-toggle="tab" href="#menu2">Closing Balance</a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div class="p-2 ">   
+                                        <h2 class="h2">{{ shop.shop_name}}</h2>
+                                        <hr>
+                            <p class="mb-0">{{ shop.shop_address}}- {{ shop.shop_admin.username}}  </p>
+                                    </div>
+                                  </div>
+                              </div>
+                              <br>
+                              <hr>
+                          
             <div id="starting">
               <div class="container">
                   <ul class="nav nav-pills ">
-                      <h3>Stock Entry</h3>
+                      <h3>Stock Entry : </h3>
                   </ul>
 
                   <form v-on:submit.prevent="addInvoice()">
@@ -64,7 +94,7 @@
                             <div class="col">
                                 <label for="invoice_brand_size">Brand Size</label>
                                 <select name="newInvoice.invoice_brand_size" class="form-control" v-model="newInvoice.invoice_brand_size"
-                                  name="newInvoice.invoice_brand_size" >
+                                  name="newInvoice.invoice_brand_size" @change="calBottle()">
                                   <option v-for="bsize in brandsSize"  :value="bsize.quantity_name">
                                     ${bsize.quantity_name} - ${bsize.quantity_bottles}
                                   </option>
@@ -82,11 +112,11 @@
                                   placeholder="Brand Qty"
                                   v-model="newInvoice.invoice_brand_qty"
                                   required="required"
-                                  rows="3">
+                                  rows="3" @change="calBottle()">
                               </div>
 
                               <div class="col">
-                                <label for="invoice_rate_per_case">Rate/case </label>
+                                <label for="invoice_rate_per_case">Rate/Bottle </label>
                                 
                                 <input
                                   type="text"
@@ -94,8 +124,8 @@
                                   class="form-control"
                                   value="rate"
                                   name="newInvoice.invoice_rate_per_case"
-                                  v-model="rate"
-                                  rows="3" > <span> ${ rate }</span>
+                                  v-model="newInvoice.invoice_rate_per_case"
+                                  rows="3" >
                               </div>
                               <div class="col">
                                 <label for="invoice_no_of_bottles">No.of Bottles</label>
@@ -129,12 +159,12 @@
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
                 </form>
-                
-              
+                <br>
+                <hr>
+                <h3>Stock List </p></h3>
+
                 <div class="row">
-                    <ul class="nav nav-pills ">
-                        <h3>Stock List <p>{{ shop.shop_id}}</p></h3>
-                        </ul>
+                        
                   
                   <table class="table">
                     <thead>
@@ -301,22 +331,7 @@
         this.getBrandsSize();
         this.getRates();
       },
-      computed: {
-        getRates: function(){
-          var x =this.newInvoice.brand_id;
-          var marvelHeroes = this.brands.filter(function(bd) {
-            if (bd.brand_id==x) {
-              console.log(bd.brand_q_cost);
-              return this.rate = bd.brand_q_cost;
-              
-           }
-            console.log(marvelHeroes);
-          } );
-      },
-    
-    
-    
-      },
+
       methods: {
         getInvoices: function() {
           let api_url = '/api/invoice/';
@@ -347,6 +362,34 @@
                 console.log(err);
               })
         },
+        calBottle: function() {
+            console.log(this.newInvoice.invoice_brand_size);
+            let api_url = '/api/quantity/';
+            api_url = `/api/quantity/?search=${this.newInvoice.invoice_brand_size}`;
+            this.loading = true;
+            this.$http.get(api_url)
+                .then((response) => {
+                    
+                    this.loading = false;
+                    let qty_data= response.data;
+                    let qty_btl = qty_data.find(u => u.quantity_name === this.newInvoice.invoice_brand_size);
+                    this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles;
+                    this.newInvoice.invoice_no_of_bottles = this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles;
+                    this.newInvoice.invoice_total = this.newInvoice.invoice_no_of_bottles * this.newInvoice.invoice_rate_per_case;
+                    // let shop_data= response.data;
+                    // console.log(shop_data)
+                    // let obj = shop_data.find(u => u.brand_id === this.newInvoice.brand_id);
+                    // this.newInvoice.invoice_rate_per_case = obj.brand_q_cost;
+                    // console.log("q cost: " +obj.brand_q_cost);
+
+
+
+                })
+                .catch((err) => {
+                    this.loading = false;
+                    console.log(err);
+                })
+        },
        
         getBrands: function (){
           let api_url = '/api/brand/';
@@ -356,6 +399,30 @@
               .then((response) => {
                 this.brands = response.data;
                 this.loading = false;
+              
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        getRates: function (){
+          let api_url = '/api/brand/';
+          api_url = `/api/brand/?search=${this.newInvoice.category_id}`;
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.brands = response.data;
+                
+                let shop_data= response.data;
+                console.log(shop_data)
+                let obj = shop_data.find(u => u.brand_id === this.newInvoice.brand_id);
+                this.newInvoice.invoice_rate_per_case = obj.brand_q_cost;
+                console.log("q cost: " +obj.brand_q_cost);
+
+               
+                this.loading = false;
+                
               })
               .catch((err) => {
                 this.loading = false;
@@ -393,6 +460,7 @@
         },
         addInvoice: function() {
           this.loading = true;
+          this.newInvoice['shop_id'] = {{shop.shop_id}}
           this.$http.post(`/api/invoice/`,this.newInvoice)
               .then((response) => {
                 this.loading = true;
@@ -430,32 +498,7 @@
         }
       },
     });
-    const app = new Vue({
-  el: '#app',
-  delimiters: ['${','}'],
-  data: {
-    items: [
-     ]
-  },
-  computed: {
-    total() {
-      return this.items.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-      );
-    }
-  },
-  methods: {
-    addRow() {
-      this.items.push({ description: "", quantity: 1, price: 0 });
-    }
-  },
-  filters: {
-    currency(value) {
-      return value.toFixed(2);
-    }
-  }
-});
+  
   </script>
   </body>
 </html>
