@@ -76,14 +76,14 @@ class ShopSerializer(serializers.HyperlinkedModelSerializer):
         fields =   ['shop_id','shop_name', 'shop_owner', 'shop_address','shop_admin']
 
 
-class ShiftSerializer(serializers.HyperlinkedModelSerializer):
+class ReadShiftSerializer(serializers.HyperlinkedModelSerializer):
     brand_id = BrandSerializer()
     stock_shift_to = ShopSerializer()
     class Meta:
         model = Shift
         fields = ['brand_id','stock_shift_date','stock_shift_from','stock_shift_to','stock_shift_p','stock_shift_q','stock_shift_n','stock_shift_d','stock_shift_l','stock_shift_xg','stock_shift_y']
 
-class ReadShiftSerializer(serializers.HyperlinkedModelSerializer):
+class ShiftSerializer(serializers.HyperlinkedModelSerializer):
     brand_id =  serializers.PrimaryKeyRelatedField(read_only=False, queryset=Brand.objects.all())
     stock_shift_to =  serializers.PrimaryKeyRelatedField(read_only=False, queryset=Shop.objects.all())
     class Meta:

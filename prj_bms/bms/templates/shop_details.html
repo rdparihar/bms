@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <title>BMS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
   {% load static %}
@@ -19,48 +18,40 @@
       {% include 'topnavbar.html' %}
       <div class="container-fluid">
         <div class="row">
-
-          {% include 'sidenavbar.html' %}
-         
-          
-              <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                  
-                          <div class="card-header">
-    
-                                <div class="d-flex justify-content-between mb-3">
-                                    <div class="p-2 ">
-                                      <ul class="nav nav-pills" role="tablist">
-                                       
-                                        <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#home">Stock Entry</a>
+        {% include 'sidenavbar.html' %}
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                <div class="card-header">
+                      <div class="d-flex justify-content-between mb-3">
+                          <div class="p-2 ">
+                              <ul class="nav nav-pills" role="tablist">
+                                  <li class="nav-item">
+                                      <a class="nav-link active" data-toggle="tab" href="#StockEntry">Stock Entry</a>
                                           </li>
                                         <li class="nav-item">
-                                          <a class="nav-link" data-toggle="tab" href="#menu1">Stock Shifting</a>
+                                          <a class="nav-link" data-toggle="tab" href="#StockShift">Stock Shifting</a>
                                         </li>
                                         <li class="nav-item">
-                                          <a class="nav-link" data-toggle="tab" href="#menu2">Closing Balance</a>
+                                          <a class="nav-link" data-toggle="tab" href="#StockClosing">Closing Balance</a>
                                         </li>
                                       </ul>
                                     </div>
                                     <div class="p-2 ">   
                                         <h2 class="h2">{{ shop.shop_name}}</h2>
                                         <hr>
-                            <p class="mb-0">{{ shop.shop_address}}- {{ shop.shop_admin.username}}  </p>
+                                        <p class="mb-0">{{ shop.shop_address}}- {{ shop.shop_admin.username}}  </p>
                                     </div>
                                   </div>
-                              </div>
-                              <br>
-                              <hr>
-                          
-            <div id="starting">
+                </div>
+                <br><hr>
+                <div class="tab-content">                     
+                <!-- Stock Entry Block -->
+                <div id="StockEntry" class="tab-pane active">
               <div class="container">
                   <ul class="nav nav-pills ">
                       <h3>Stock Entry : </h3>
                   </ul>
-
-                  <form v-on:submit.prevent="addInvoice()">
-                      <div class="modal-body invoice-box ">
-                          
+                  <div class="modal-body invoice-box ">
+                      <form v-on:submit.prevent="addInvoice()">
                           <div class="row">
                               <div class="col">
                                   <label for="category_id">category ID</label>
@@ -70,17 +61,16 @@
                               </div>
                               <div class="col">
                                   <label for="brand_id">Brand ID</label>
-                            
                                   <select v-model.number="newInvoice.brand_id" name="newInvoice.brand_id"
                                     class="form-control" @change="getRates()">
                                     <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
                                   </select>
                               </div>
-                          </div>
+                            </div>
 
                           <br>
                           <div class="row">
-                            <div class="col">
+                              <div class="col">
                                 <label for="invoice_transaction_id">Invoice ID </label>
                                 <input
                                   type="text"
@@ -90,206 +80,331 @@
                                   placeholder="Enter Invoice ID"
                                   
                                   required="required" >
-                            </div>  
-                            <div class="col">
-                                <label for="invoice_brand_size">Brand Size</label>
-                                <select name="newInvoice.invoice_brand_size" class="form-control" v-model="newInvoice.invoice_brand_size"
-                                  name="newInvoice.invoice_brand_size" @change="calBottle()">
-                                  <option v-for="bsize in brandsSize"  :value="bsize.quantity_name">
-                                    ${bsize.quantity_name} - ${bsize.quantity_bottles}
-                                  </option>
-                                </select>
-                                
-                              </div>
-                          
-                              <div class="col">
-                                <label for="invoice_brand_qty">Brand Qty</label>
-                                <input
-                                  type="text"
-                                  id="invoice_brand_qty"
-                                  class="form-control"
-                                  name="newInvoice.invoice_brand_qty"
-                                  placeholder="Brand Qty"
-                                  v-model="newInvoice.invoice_brand_qty"
-                                  required="required"
-                                  rows="3" @change="calBottle()">
-                              </div>
+                                </div>  
+                                <div class="col">
+                                    <label for="invoice_brand_size">Brand Size</label>
+                                    <select name="newInvoice.invoice_brand_size" class="form-control" v-model="newInvoice.invoice_brand_size"
+                                    name="newInvoice.invoice_brand_size" @change="calBottle()">
+                                    <option v-for="bsize in brandsSize"  :value="bsize.quantity_name">
+                                        ${bsize.quantity_name} - ${bsize.quantity_bottles}
+                                    </option>
+                                    </select>
+                                    
+                                </div>
+                                <div class="col">
+                                    <label for="invoice_brand_qty">Brand Qty</label>
+                                    <input
+                                    type="text"
+                                    id="invoice_brand_qty"
+                                    class="form-control"
+                                    name="newInvoice.invoice_brand_qty"
+                                    placeholder="Brand Qty"
+                                    v-model="newInvoice.invoice_brand_qty"
+                                    required="required"
+                                    rows="3" @change="calBottle()">
+                                </div>
+                                <div class="col">
+                                    <label for="invoice_rate_per_case">Rate/Bottle </label>
+                                    <input
+                                    type="text"
+                                    id="invoice_rate_per_case"
+                                    class="form-control"
+                                    value="rate"
+                                    name="newInvoice.invoice_rate_per_case"
+                                    v-model="newInvoice.invoice_rate_per_case"
+                                    rows="3" >
+                                </div>
+                                <div class="col">
+                                    <label for="invoice_no_of_bottles">No.of Bottles</label>
+                                    <input
+                                    type="text"
+                                    id="invoice_no_of_bottles"
+                                    class="form-control"
+                                    placeholder="No.of Bottles"
+                                    name="newInvoice.invoice_no_of_bottles"
 
-                              <div class="col">
-                                <label for="invoice_rate_per_case">Rate/Bottle </label>
-                                
-                                <input
-                                  type="text"
-                                  id="invoice_rate_per_case"
-                                  class="form-control"
-                                  value="rate"
-                                  name="newInvoice.invoice_rate_per_case"
-                                  v-model="newInvoice.invoice_rate_per_case"
-                                  rows="3" >
-                              </div>
-                              <div class="col">
-                                <label for="invoice_no_of_bottles">No.of Bottles</label>
-                                <input
-                                  type="text"
-                                  id="invoice_no_of_bottles"
-                                  class="form-control"
-                                  placeholder="No.of Bottles"
-                                  name="newInvoice.invoice_no_of_bottles"
-
-                                  v-model="newInvoice.invoice_no_of_bottles"
-                                  required="required"
-                                  rows="3">
-                              </div>
-                              <div class="col">
-                                <label for="invoice_total">Total</label>
-                                <input
-                                  type="text"
-                                  id="invoice_total"
-                                  placeholder="Total"
-                                  class="form-control"
-                                  name="newInvoice.invoice_total"
-                                  v-model="newInvoice.invoice_total"
-                                  required="required"
-                                  rows="3">
-                              </div>
-                      
+                                    v-model="newInvoice.invoice_no_of_bottles"
+                                    required="required"
+                                    rows="3">
+                                </div>
+                                <div class="col">
+                                    <label for="invoice_total">Total</label>
+                                    <input
+                                    type="text"
+                                    id="invoice_total"
+                                    placeholder="Total"
+                                    class="form-control"
+                                    name="newInvoice.invoice_total"
+                                    v-model="newInvoice.invoice_total"
+                                    required="required"
+                                    rows="3">
+                                </div>
                             </div>
-                        </div>
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                </form>
-                <br>
-                <hr>
-                <h3>Stock List </p></h3>
-
-                <div class="row">
-                        
-                  
-                  <table class="table">
-                    <thead>
-                        <tr>
-                          <th scope="col">Invoice ID</th>  <th scope="col">Brand ID</th>   <th scope="col">Brand Size</th>    <th scope="col">Brand Qty</th>    
-                          <th scope="col">Rate</th>  <th scope="col"># of Bottle </th>   <th scope="col">Total</th>  <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>                                  
-                      <tr v-for="invoice in invoices">
-                          <th scope="row">${invoice.invoice_transaction_id}</th>
-                          <td>${invoice.brand_id}</td>
-                          <td>${invoice.invoice_brand_size}</td>
-                          <td>${invoice.invoice_brand_qty}</td>
-                          <td>${invoice.invoice_rate_per_case}</td>
-                          <td>${invoice.invoice_no_of_bottles}</td>
-                          <td>${invoice.invoice_total}</td>
-
-                          <td>
-                            <button class="btn btn-info" v-on:click="getInvoice(invoice.invoice_transaction_id)">Edit</button>
-                            <button class="btn btn-danger" v-on:click="deleteInvoice(invoice.invoice_transaction_id)">Delete</button>
-                          </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                
-              
-                  <!-- Edit Invoice Modal -->
-                  <div class="modal fade" id="editInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLongTitle">EDIT Invoice</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <form v-on:submit.prevent="updateInvoice()">
-                        <div class="modal-body">
-                            <div class="form-group">
-                              <label for="invoice_transaction_id">Invoice ID </label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="invoice_transaction_id"
-                                placeholder="Enter Invoice ID"
-                                v-model="currentInvoice.invoice_transaction_id"
-                                required="required" >
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
-                            <div class="form-group">
-                              <label for="brand_id">Brand ID</label>
-                              <input
-                                type="text"
-                                id="brand_id"
-                                placeholder="Brand Id"
-                                v-model="currentInvoice.brand_id"
-                                required="required"
-                                rows="3">
-                            </div>
-                  <div class="form-group">
-                              <label for="invoice_brand_size">Brand Size</label>
-                              <input
-                                type="text"
-                                id="invoice_brand_size"
-                                placeholder="Brand Size"
-                                v-model="currentInvoice.invoice_brand_size"
-                                required="required"
-                                rows="3">
-                            </div>
-                            <div class="form-group">
-                              <label for="invoice_brand_qty">Brand Qty</label>
-                              <input
-                                type="text"
-                                id="invoice_brand_qty"
-                                placeholder="Brand Qty"
-                                v-model="currentInvoice.invoice_brand_qty"
-                                required="required"
-                                rows="3">
-                            </div>
-                            <div class="form-group">
-                              <label for="invoice_rate_per_case">Rate</label>
-                              <input
-                                type="text"
-                                id="invoice_rate_per_case"
-                                placeholder="Rate"
-                                v-model="currentInvoice.invoice_rate_per_case"
-                                required="required"
-                                rows="3">
-                            </div>
-                            <div class="form-group">
-                              <label for="invoice_no_of_bottles">No.of Bottles</label>
-                              <input
-                                type="text"
-                                id="invoice_no_of_bottles"
-                                placeholder="No.of Bottles"
-                                v-model="currentInvoice.invoice_no_of_bottles"
-                                required="required"
-                                rows="3">
-                            </div>
-                            <div class="form-group">
-                              <label for="invoice_total">Total</label>
-                              <input
-                                type="text"
-                                id="invoice_total"
-                                placeholder="Total"
-                                v-model="currentInvoice.invoice_total"
-                                required="required"
-                                rows="3">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Save changes</button>
-                        </div>
                         </form>
-                      </div>
                     </div>
-                    <div class="loading" v-if="loading===true">Loading&#8230;</div>
-                  </div>
-                  <!-- End of edit invoice modal -->
-        
-                </div>
+                    <br><hr>
+                
               </div>
               <div class="loading" v-if="loading===true">Loading&#8230;</div>                    
-              </div>
+                </div>
+                <!-- End of Stock Entry -->
+
+                <!-- This is stock shifting block -->
+
+                <div id="StockShift" class="tab-pane ">
+
+                        <div class="container">
+                            <ul class="nav nav-pills ">
+                                <h3>Stock Shifting  : </h3>
+                            </ul>
+                            <div class="modal-body invoice-box ">
+                                <form v-on:submit.prevent="addShift()">                                    
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="brand_id">Choose Brand</label>
+                                            <select v-model.number="newShift.brand_id" name="newShift.brand_id" class="form-control" @change="getBrands()">
+                                                <option v-for="brand in brands" :value="brand.brand_id">${brand.brand_name} </option>   
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                                <label for="stock_shift_date">Enter the Date</label>
+                                                <input
+                                                    type="date"
+                                                    name="newShift.stock_shift_date"
+                                                    class="form-control"
+                                                    id="stock_shift_date"
+                                                    placeholder="Enter the Date"
+                                                    v-model="newShift.stock_shift_date"
+                                                    required="required" >
+                                            </div>  
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="stock_shift_from">From:</label>
+                                            <input type="text" 
+                                            class="form-control" 
+                                            name="newShift.stock_shift_from"
+                                            placeholder="{{ shop.shop_name}}"
+                                            v-model="newShift.stock_shift_from"
+                                            readonly>
+                                        </div>
+                                        <div class="col">
+                                                <label for="stock_shift_to">Shift To:</label>
+                                                <select
+                                                    name="newShift.stock_shift_to" 
+                                                    class="form-control" 
+                                                    v-model="newShift.stock_shift_to"
+                                                    name="newShift.stock_shift_to" 
+                                                    
+                                                    @change="calBottle()">
+                                                    <option 
+                                                        v-for="shop in shops"  
+                                                        :value="shop.shop_id">
+                                                            ${shop.shop_name} 
+                                                    </option>
+                                                </select>
+                                        </div>
+                                    </div>
+        
+                                    <br>
+                                    <div class="row">
+                                        <div class="col">
+
+                                            <label for="stock_shift_p">P:</label>
+                                            <input type="text" 
+                                            class="form-control" 
+                                            v-model="newShift.stock_shift_p"
+                                            name="newShift.stock_shift_p"
+                                            placeholder="P">
+                                        </div>
+                                        <div class="col">
+                                            <label for="stock_shift_q">Q:</label>
+                                            <input type="text" 
+                                            class="form-control"
+                                            v-model="newShift.stock_shift_q"
+                                            name="newShift.stock_shift_q"
+                                            placeholder="Q">
+                                        </div>
+                                        <div class="col">
+                                            <label for="stock_shift_n">N:</label>
+                                            <input type="text" 
+                                            class="form-control" 
+                                            v-model="newShift.stock_shift_n"
+                                            name="newShift.stock_shift_n"
+                                            placeholder="N">
+                                        </div>
+                                        <div class="col">
+                                            <label for="stock_shift_d">D:</label>
+                                            <input type="text" 
+                                            class="form-control" 
+                                            name="newShift.stock_shift_d"
+                                            v-model="newShift.stock_shift_d"
+                                            placeholder="D" >
+                                        </div>
+                                        <div class="col">
+                                            <label for="stock_shift_l">L:</label>
+                                            <input type="text" 
+                                            class="form-control" 
+                                            name="newShift.stock_shift_l"
+                                            v-model="newShift.stock_shift_l"
+                                            placeholder="L">
+                                        </div>
+                                        <div class="col">
+                                            <label for="stock_shift_xg">XG:</label>
+                                            <input type="text" 
+                                            class="form-control" 
+                                            name="newShift.stock_shift_xg"
+                                            v-model="newShift.stock_shift_xg"
+                                            placeholder="XG">
+                                        </div>
+                                        <div class="col">
+                                            <label for="stock_shift_y">Y:</label>
+                                            <input type="text" 
+                                            class="form-control" 
+                                            name="newShift.stock_shift_y"
+                                            v-model="newShift.stock_shift_y"
+                                            placeholder="Y">
+                                        </div>
+                                                                      
+                                    </div>
+                                   
+                                    <br>
+                                
+                                <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                                </form>
+                            </div>
+                        <br>
+                        <hr>
+                                        
+                    </div>
+                </div>
+              
+                <!-- End of the Stock Shifitng Block -->
+
+                <!-- This is stock Closing block -->
+
+                <div id="StockClosing" class="tab-pane ">
+
+                        <div class="container">
+                            <ul class="nav nav-pills ">
+                                <h3>Stock Closing  : </h3>
+                            </ul>
+                            <div class="modal-body invoice-box ">
+                                <form v-on:submit.prevent="addInvoice()">
+                                
+                                    
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="category_id">category ID</label>
+                                            <select v-model.number="newInvoice.category_id" name="newInvoice.category_id" class="form-control" @change="getBrands()">
+                                            <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label for="brand_id">Brand ID</label>
+                                    
+                                            <select v-model.number="newInvoice.brand_id" name="newInvoice.brand_id"
+                                            class="form-control" @change="getRates()">
+                                            <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <br>
+                                    <div class="row">
+                                    <div class="col">
+                                        <label for="invoice_transaction_id">Invoice ID </label>
+                                        <input
+                                            type="text"
+                                            name="newInvoice.invoice_transaction_id"
+                                            class="form-control"
+                                            id="invoice_transaction_id"
+                                            placeholder="Enter Invoice ID"
+                                            
+                                            required="required" >
+                                    </div>  
+                                    <div class="col">
+                                        <label for="invoice_brand_size">Brand Size</label>
+                                        <select name="newInvoice.invoice_brand_size" class="form-control" v-model="newInvoice.invoice_brand_size"
+                                            name="newInvoice.invoice_brand_size" @change="calBottle()">
+                                            <option v-for="bsize in brandsSize"  :value="bsize.quantity_name">
+                                            ${bsize.quantity_name} - ${bsize.quantity_bottles}
+                                            </option>
+                                        </select>
+                                        
+                                        </div>
+                                    
+                                        <div class="col">
+                                        <label for="invoice_brand_qty">Brand Qty</label>
+                                        <input
+                                            type="text"
+                                            id="invoice_brand_qty"
+                                            class="form-control"
+                                            name="newInvoice.invoice_brand_qty"
+                                            placeholder="Brand Qty"
+                                            v-model="newInvoice.invoice_brand_qty"
+                                            required="required"
+                                            rows="3" @change="calBottle()">
+                                        </div>
+
+                                        <div class="col">
+                                        <label for="invoice_rate_per_case">Rate/Bottle </label>
+                                        
+                                        <input
+                                            type="text"
+                                            id="invoice_rate_per_case"
+                                            class="form-control"
+                                            value="rate"
+                                            name="newInvoice.invoice_rate_per_case"
+                                            v-model="newInvoice.invoice_rate_per_case"
+                                            rows="3" >
+                                        </div>
+                                        <div class="col">
+                                        <label for="invoice_no_of_bottles">No.of Bottles</label>
+                                        <input
+                                            type="text"
+                                            id="invoice_no_of_bottles"
+                                            class="form-control"
+                                            placeholder="No.of Bottles"
+                                            name="newInvoice.invoice_no_of_bottles"
+
+                                            v-model="newInvoice.invoice_no_of_bottles"
+                                            required="required"
+                                            rows="3">
+                                        </div>
+                                        <div class="col">
+                                        <label for="invoice_total">Total</label>
+                                        <input
+                                            type="text"
+                                            id="invoice_total"
+                                            placeholder="Total"
+                                            class="form-control"
+                                            name="newInvoice.invoice_total"
+                                            v-model="newInvoice.invoice_total"
+                                            required="required"
+                                            rows="3">
+                                        </div>
+                                
+                                    </div>
+                                
+                                <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                                </form>
+                            </div>
+                        <br>
+                        <hr>
+                                        
+                    </div>
+                </div>
+                <!-- End of the Stock Closing Block -->
+
+        </div>
           </main>
                   </div>
               </div>
@@ -310,7 +425,7 @@
   <script type="text/javascript">
     Vue.http.headers.common['X-CSRFToken'] = "{{ csrf_token }}";
     var myObject =  new Vue({
-      el: '#starting',
+      el: '#StockEntry',
       delimiters: ['${','}'],
       data: {
         invoices: [],
@@ -335,9 +450,11 @@
       methods: {
         getInvoices: function() {
           let api_url = '/api/invoice/';
-          if(this.search_term!==''||this.search_term!==null) {
-            api_url = `/api/invoice/?search=${this.search_term}`;
-          }
+        //   api_url = `/api/invoice/?search={{shop.shop_id}}`;
+          console.log(api_url);
+        //   if(this.search_term!==''||this.search_term!==null) {
+        //     api_url = `/api/invoice/?search=${this.search_term}`;
+        //   }
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {
@@ -460,8 +577,9 @@
               })
         },
         addInvoice: function() {
-          this.loading = true;
-          this.newInvoice['shop_id'] = {{shop.shop_id}}
+            this.newInvoice['shop_id'] = {{shop.shop_id}} ;
+            this.loading = true;
+          
           this.$http.post(`/api/invoice/`,this.newInvoice)
               .then((response) => {
                 this.loading = true;
@@ -500,6 +618,75 @@
       },
     });
   
+    var myStockShift =  new Vue({
+      el: '#StockShift',
+      delimiters: ['${','}'],
+      data: {
+        
+        brands:[],
+        shops:[],
+        brandsSize:[],
+        categories:[],
+        loading: true,
+        rate: 00,
+        currentInvoice: {},
+        message: null,
+        newInvoice: { 'invoice_transaction_id': null, 'invoice_brand_size': null, 'invoice_rate_per_case':null },
+        newShift: {
+            'brand_id': null, 'stock_shift_date': null, 'stock_shift_from': null, 'stock_shift_to': null,
+            'stock_shift_p': null, 'stock_shift_q': null, 'stock_shift_n': null, 'stock_shift_d': null, 
+            'stock_shift_l': null, 'stock_shift_xg': null, 'stock_shift_y': null, 
+        },
+        search_term: '',
+      },
+      mounted: function() {
+          this.getBrands();
+          this.getShops();
+        
+      },
+
+      methods: {
+          getBrands: function() {
+              let api_url = '/api/brand/';
+              this.loading = true;
+              this.$http.get(api_url)
+              .then((response) => {
+                  this.brands = response.data;
+                  this.loading = false;
+              })
+              .catch((err) => {
+                  this.loading = false;
+                  console.log(err);
+                })
+            },
+            getShops: function() {
+              let api_url = '/api/shop/';
+              this.loading = true;
+              this.$http.get(api_url)
+              .then((response) => {
+                  this.shops = response.data;
+                  this.loading = false;
+              })
+              .catch((err) => {
+                  this.loading = false;
+                  console.log(err);
+                })
+            },
+            addShift: function() {
+                this.newShift['stock_shift_from'] = {{shop.shop_id}} ;
+                this.loading = true;
+                this.$http.post(`/api/shift/`,this.newShift)
+                .then((response) => {
+                    this.loading = true;
+                    this.getBrands();
+                })
+                .catch((err) => {
+                    this.loading = true;
+                    console.log(err);
+                })
+        },
+        }
+        });
   </script>
   </body>
 </html>
