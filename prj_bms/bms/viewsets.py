@@ -13,7 +13,8 @@ from django.urls import reverse_lazy
 from django.conf import settings
 from .models import StockOpen
 from .serializers import StockOpenSerializer , ReadStockOpenSerializer
-
+from .models import StockClose
+from .serializers import StockCloseSerializer , ReadStockCloseSerializer
 
 
 
@@ -140,3 +141,19 @@ class StockOpenViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     serializer_class = StockOpenSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('brand_id','open_shop_id','open_date')
+
+
+
+class StockCloseViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
+    login_url = settings.LOGIN_REDIRECT_URL
+    queryset = StockClose.objects.all()
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ReadStockCloseSerializer
+        elif self.request.method == 'POST':
+            return StockCloseSerializer
+        else:
+            return ReadStockCloseSerializer
+    serializer_class = StockCloseSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('brand_id','close_shop_id','close_date')

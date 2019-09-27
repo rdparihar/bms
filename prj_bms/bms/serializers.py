@@ -1,7 +1,6 @@
-from .models import Category, Brand , Shop, Invoice, Quantity, Shift,BmsUser
+from .models import Category, Brand , Shop, Invoice, Quantity, Shift,BmsUser, StockOpen, StockClose
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import StockOpen
 
 class ReadCategorySerializer(serializers.HyperlinkedModelSerializer):
     category_id = serializers.ReadOnlyField()
@@ -124,3 +123,24 @@ class StockOpenSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = StockOpen
         fields = ['brand_id','open_shop_id','open_date','open_p','open_q','open_n','open_d','open_l','open_xg','open_y']
+
+
+
+
+
+
+class ReadStockCloseSerializer(serializers.HyperlinkedModelSerializer):
+    brand_id = BrandSerializer()
+    category_id = CategorySerializer()
+    close_shop_id = ShopSerializer()
+    class Meta:
+        model = StockClose
+        fields = ['brand_id','category_id','close_shop_id','close_date','close_qty_p','close_qty_q','close_qty_n','close_qty_d','close_qty_l','close_qty_xg','close_qty_y','close_sale_p','close_sale_q','close_sale_n','close_sale_d','close_sale_l','close_sale_xg','close_sale_y','total_sale']
+
+class StockCloseSerializer(serializers.HyperlinkedModelSerializer):
+    brand_id =  serializers.PrimaryKeyRelatedField(read_only=False, queryset=Brand.objects.all())
+    category_id =  serializers.PrimaryKeyRelatedField(read_only=False, queryset=Category.objects.all())
+    close_shop_id =  serializers.PrimaryKeyRelatedField(read_only=False, queryset=Shop.objects.all())
+    class Meta:
+        model = StockClose
+        fields = ['brand_id','category_id','close_shop_id','close_date','close_qty_p','close_qty_q','close_qty_n','close_qty_d','close_qty_l','close_qty_xg','close_qty_y','close_sale_p','close_sale_q','close_sale_n','close_sale_d','close_sale_l','close_sale_xg','close_sale_y','total_sale']

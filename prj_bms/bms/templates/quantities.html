@@ -50,10 +50,10 @@
                                 </thead>
                                 <tbody>
                                   <tr v-for="quantity in quantitys">
-                                    <th scope="row">${quantity.quantity_id}</th>
-                                    <td><a href="#">${quantity.quantity_name}</a> </td>
-                                    <td>${quantity.quantity_owner}</td>
-                                    <td>${quantity.quantity_address}</td>
+                                    <th scope="row">${quantity.quantity_name}</th>
+                                    
+                                    
+                                    <td>${quantity.quantity_bottles}</td>
                                     <td>
                                       <button class="btn btn-info" v-on:click="getQuantity(quantity.quantity_id)">Edit</button>
                                       <button class="btn btn-danger" v-on:click="deleteQuantity(quantity.quantity_id)">Delete</button>

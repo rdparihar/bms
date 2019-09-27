@@ -149,3 +149,34 @@ class StockOpen(models.Model):
 
     def __str__(self):
          return str(self.open_date)
+
+
+class StockClose(models.Model):
+    brand_id = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    category_id = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name = 'Stock Category')
+    close_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE, verbose_name = 'Stock Close Shop')
+    close_date = models.DateField(verbose_name = 'Stock Close Date')
+    close_qty_p = models.IntegerField(verbose_name = 'Stock Close Qty P')
+    close_qty_q = models.IntegerField(verbose_name = 'Stock Close Qty Q')
+    close_qty_n = models.IntegerField(verbose_name = 'Stock Close Qty N')
+    close_qty_d = models.IntegerField(verbose_name = 'Stock Close Qty D')
+    close_qty_l = models.IntegerField(verbose_name = 'Stock Close Qty L')
+    close_qty_xg = models.IntegerField(verbose_name = 'Stock Close Qty XG')
+    close_qty_y = models.IntegerField(verbose_name = 'Stock Close Qty Y')
+    close_sale_p = models.IntegerField(verbose_name = 'Stock Close Sale P')
+    close_sale_q = models.IntegerField(verbose_name = 'Stock Close Sale Q')
+    close_sale_n = models.IntegerField(verbose_name = 'Stock Close Sale N')
+    close_sale_d = models.IntegerField(verbose_name = 'Stock Close Sale D')
+    close_sale_l = models.IntegerField(verbose_name = 'Stock Close Sale L')
+    close_sale_xg = models.IntegerField(verbose_name = 'Stock Close Sale XG')
+    close_sale_y = models.IntegerField(verbose_name = 'Stock Close Sale Y')
+    total_sale = models.DecimalField(max_digits=22, decimal_places=2,default=Decimal(0.00))
+
+
+    class Meta:
+        verbose_name = 'StockClose'
+        verbose_name_plural = 'StockCloses'
+        ordering = ["close_date"]
+
+    def __str__(self):
+         return str(self.close_date)

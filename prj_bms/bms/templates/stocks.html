@@ -64,11 +64,11 @@
                           <td>{{shop.shop_owner}}</td>
                           <td>{{shop.shop_address}}</td>
                           <td>
-                              {% if perms.shop.can_change_shop %}
+                             
                             <button class="btn btn-info" v-on:click="getShop(shop.shop_id)">Edit</button>
-                            {% endif %} {% if perms.shop.can_delete_shop %}
+                          
                             <button class="btn btn-danger" v-on:click="deleteShop(shop.shop_id)">Delete</button>
-                            {% endif %}
+                            
 
                           </td>
                           {% endfor %}
@@ -290,7 +290,9 @@ feather.replace()
         this.$http.post(`/api/shop/`,this.newShop)
             .then((response) => {
               this.loading = true;
+              location.reload();
               this.getShops();
+
             })
             .catch((err) => {
               this.loading = true;
