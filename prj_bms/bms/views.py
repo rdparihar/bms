@@ -27,8 +27,8 @@ class ShopListView(generic.ListView):
         context['user'] = self.request.user
         context['shop_list'] = self.model.objects.filter(shop_admin = userid)
         return context
-
-    
+ 
+     
 class ShopDetailView( generic.DetailView):
     model = Shop
     template_name = "shop_details.html"

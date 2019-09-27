@@ -105,7 +105,7 @@ class ShiftViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
             return ShiftSerializer
         else:
             return ReadShiftSerializer
-    serializer_class = ShiftSerializer
+    serializer_class = ShiftSerializer 
     filter_backends = (filters.SearchFilter,)
     search_fields = ('brand_id','stock_shift_date','stock_shift_from','stock_shift_to')
 

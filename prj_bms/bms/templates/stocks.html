@@ -285,8 +285,8 @@ feather.replace()
       },
       addShop: function() {
         this.loading = true;
-        this.newShop['shop_admin'] = {{user.id}}
-        console.log(this.newShop)
+        this.newShop['shop_admin'] = {{user.id}};
+        
         this.$http.post(`/api/shop/`,this.newShop)
             .then((response) => {
               this.loading = true;

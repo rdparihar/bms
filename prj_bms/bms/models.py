@@ -109,7 +109,7 @@ class Shift(models.Model):
         verbose_name_plural = 'Shifts'
         ordering = ["stock_shift_date"]
 
-    def __str__(self):
+    def __str__(self): 
          return str(self.stock_shift_date)
 
 class Invoice(models.Model):
