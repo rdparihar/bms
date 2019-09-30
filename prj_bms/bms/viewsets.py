@@ -137,14 +137,14 @@ class StockOpenViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     queryset = StockOpen.objects.all()
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return ReadStockOpenSerializer
+            return StockOpenSerializer
         elif self.request.method == 'POST':
             return StockOpenSerializer
         else:
             return ReadStockOpenSerializer
     serializer_class = StockOpenSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('brand_id','open_shop_id','open_date')
+    search_fields = ('brand_id__brand_id','open_date')
 
 
 

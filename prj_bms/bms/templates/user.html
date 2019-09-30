@@ -26,8 +26,7 @@
                   <div class="container">
                   
                     <div class="row">
-                      <h1>List of Users
-                      <button  type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">New User</button>
+                      <h1>Users status
                       </h1>
                       &emsp;
                       <div class="form-inline my-2 my-lg-0" style="margin-left: 50%;">
@@ -39,24 +38,22 @@
                           <tr>
                             <th scope="col">#</th>
                             <th scope="col">Username</th>
-                            <th scope="col">First Name</th>
-                            <th scope="col">Last Name</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="text-center">Action</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr v-for="user in users">
                             <th scope="row">${user.id}</th>
                             <td>${user.username}</td>
-                            <td>${user.first_name}</td>
-                            <td>${user.last_name}</td>
-                            <td>
+                            <td ><span class="badge badge-pill badge-success">Registered </span></td>
+                         
+                            <td class="text-center">
                                     
-                              <button class="btn btn-info"  v-on:click="getUser(user.id)">Edit</button>
-                              {% if perms.user.can_delete_user %}
-                              <button class="btn btn-danger" name="newUser.delete" value="{{user.username}}" v-on:click="deleteUser(user.id)">Delete</button>
-                                  {% endif %}
-                            </td>
+                                {% if perms.user.can_delete_user %}
+                                <button class="btn btn-danger" name="newUser.delete" value="{{user.username}}" v-on:click="deleteUser(user.id)">Delete</button>
+                                    {% endif %}
+                              </td>
                           </tr>
                         </tbody>
                       </table>
@@ -258,47 +255,27 @@
                 this.loading = false;
                 console.log(err);
               })
-        },
-        getUser: function(id) {
-          this.loading = true;
-         
-          this.$http.get(`/api/user/${id}/`)
-              .then((response) => {
-                this.currentUser = response.data;
-                console.log(response.data);
-                $("#editUserModal").modal('show');
-                this.loading = false;
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
-        },
-        addUser: function() {
-          this.loading = true;
-          this.$http.post(`/api/user/`,this.newUser)
-              .then((response) => {
-                this.loading = true;
-                this.getUsers();
-              })
-              .catch((err) => {
-                this.loading = true;
-                console.log(err);
-              })
-        },
-        updateUser: function() {
-          this.loading = true;
-          this.$http.put(`/api/user/${this.currentUser.id}/`, this.currentUser)
-              .then((response) => {
-                this.loading = false;
-                this.currentUser = response.data;
-                this.getUsers();
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
-        },
+         },
+         getBmsUsers: function() {
+        let api_url = '/api/bmsuser/';
+        if(this.search_term!==''||this.search_term!==null) {
+          api_url = `/api/bmsuser/?search=${this.search_term}`;
+        }
+        this.loading = true;
+        this.$http.get(api_url)
+            .then((response) => {
+              this.bmsusers = response.data;
+              this.loading = false;
+            }
+            
+            
+            
+            )
+            .catch((err) => {
+              this.loading = false;
+              console.log(err);
+            })
+      },
         deleteUser: function(id) {
           var conf = confirm("Delete ! Are you sure ?");
           if (conf){

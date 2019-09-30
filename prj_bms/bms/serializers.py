@@ -52,7 +52,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class ReadUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'first_name','last_name','id']
+        fields = ['username','id']
 
 class BmsUserSerializer(serializers.ModelSerializer):
     username = serializers.PrimaryKeyRelatedField(read_only=False, queryset=User.objects.all())

@@ -389,6 +389,21 @@
                                         <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
                                         </select>
                                     </div>
+
+                                    <!-- <ul id="v-for-object" class="col"><h1> ${shift_given.stock_shift_q} </h1>
+                                        <li v-for="(name, value) in shift_given">
+                                             ${name} - ${ value }
+                                             <h1> ${shift_given.stock_shift_p} </h1>
+ -->
+
+                                          
+
+
+                                        </li>
+                                      </ul> 
+
+
+                                      
                                 </div>
                                 <hr>
                                 <br>
@@ -399,11 +414,7 @@
                                       </ul> -->
                                     </div>
                                     <div class="col" >
-                                        <!-- <ul id="v-for-object" class="demo">
-                                            <li v-for="(value, name) in shifts">
-                                                ${ name } -  ${ value }
-                                            </li>
-                                          </ul> -->
+                                        
                                     
                                       </div>
 
@@ -477,58 +488,82 @@
                                           </td>
                                           </tr></table> -->
 
+                                 
 
 
-                                    <table class="table table-bordered table-responsive">
-                                      <thead>
-                                          <tr>
-                                              <th scope="col"></th>                          
-                                              <th scope="col">Opening</th>
-                                              <th scope="col">Reciepts</th>                           
-                                              <th scope="col">Taken</th> 
-                                              <th scope="col">Given</th> 
-                                              <th scope="col">Closing</th> 
-                                              <th scope="col">Sold</th>
-                                              <th scope="col">Total</th>  
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                  
-                                           <tr>
-                                            <th scope="row">P</th>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td><input type="text"></td>
-                                            <td>0</td>
-                                            <td>0</td>
+                                          <table class="table table-bordered">
+                                              <thead>
+                                                  <tr>
+                                                      <th scope="col"></th>                          
+                                                      <th scope="col">Opening</th>
+                                                      <th scope="col">Reciepts (Stock Entry)</th>                           
+                                                      <th scope="col">Given</th> 
+                                                      <th scope="col">Taken </th> 
+                                                      <th scope="col">Closing (case)</th> 
+                                                      <th scope="col">Sold (O+R+T)-(G)-(C)</th>
+                                                      <th scope="col">Total (Sold X brand.brand_q_sale)</th>  
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
 
-                                          </tr>
-                                          <th scope="row">Q</th>
-                                          <td>0</td>
-                                          <td>0</td>
-                                          <td>0</td>
-                                          <td>0</td>
-                                          <td><input type="text"></td>
-                                          <td>0</td>
-                                          <td>0</td>
+                                                    <!-- <tr v-for="(item, index) in x">
+                                                        <td><input v-model.number="item" size="10">${item}</td>
+                                                        <td>${ shift_given.stock_shift_p }</td>
+                                                        <td>${ shift_given.stock_shift_p }</td>
+                                                        <td>${ shift_taken.stock_shift_p} </td>
 
-                                        </tr>
-                                        <th scope="row">N</th>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td><input type="text"></td>
-                                        <td>0</td>
-                                        <td>0</td>
+                                                        <!-- <td><input v-model.number="item.price" size="10"></td>
+                                                        <td><input v-model.number="subtotalRow[index]" readonly size="10"></td>
+                                                        <td><button @click="addRow(index)">+</button></td>
+                                                        <td><button @click="removeRow(index)">-</button></td> 
+                                                     </tr>   -->
+                                                    
 
-                                      </tr>
-                                         
-                                        </tbody>
-                                        
-                                      </table>
+
+                                                    <tr>
+                                                      <th scope="row"> P  - ${ brandsSize.P  }</th>
+                                                      <td>${ op_stk_data.open_p }</td>
+                                                      <td></td>
+                                                        <td>${ shift_given.stock_shift_p }</td>
+                                                        <td>${ shift_taken.stock_shift_p} </td>
+
+                                                        <td></td>
+                                                        <td> ${ sold_p}</td>
+                                                        <td></td>
+                                                      </tr>
+                                                      <tr> 
+                                                         <th scope="row"> Q  - ${ brandsSize.Q  }</th>
+                                                          <td>${ op_stk_data.open_q }</td>
+                                                          <td></td>
+                                                          
+    
+                                                        <td>${ shift_given.stock_shift_q }</td>
+                                                        <td>${ shift_taken.stock_shift_q} </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+
+                                                      </tr>
+                                                      <tr>
+                                                          
+                                                          <th scope="row"> N  - ${ brandsSize.N  }</th>
+                                                         <td>${ op_stk_data.open_n }</td>
+                                                          <td></td>
+                                                        <td>${ shift_given.stock_shift_n }</td>
+                                                        <td>${ shift_taken.stock_shift_n} </td>
+
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+              
+                                                      </tr>
+    
+                                                </tbody>
+    
+                                           
+                                            
+    
+                                          </table>
                                 </div>
                             
                             <div class="modal-footer">
@@ -603,7 +638,7 @@
         this.getCategories();
         this.getBrands();
         this.getBrandsSize();
-        this.getRates();
+        // this.getRates();
       },
 
       methods: {
@@ -662,15 +697,7 @@
                     this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles;
                     this.newInvoice.invoice_no_of_bottles = this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles;
                     this.newInvoice.invoice_total = this.newInvoice.invoice_no_of_bottles * this.newInvoice.invoice_rate_per_case;
-                    // let shop_data= response.data;
-                    // console.log(shop_data)
-                    // let obj = shop_data.find(u => u.brand_id === this.newInvoice.brand_id);
-                    // this.newInvoice.invoice_rate_per_case = obj.brand_q_cost;
-                    // console.log("q cost: " +obj.brand_q_cost)
-
-
-
-
+                  
                 })
                 .catch((err) => {
                     this.loading = false;
@@ -760,6 +787,12 @@
           this.$http.get(api_url)
               .then((response) => {
                 this.brandsSize = response.data;
+
+              
+              //  let result = this.brandsSize.map(a => (a.quantity_name)   + a.quantity_bottles);
+              //  this.brandsSize = reformattedArray;
+             
+
                 this.loading = false;
               })
               .catch((err) => {
@@ -820,11 +853,14 @@
                 this.loading = false;
                 console.log(err);
               })
-        }
-      },
-    });
+            },
+        },
+
+      });
+ 
+
   
-    var myStockShift =  new Vue({
+var myStockShift =  new Vue({
       el: '#StockShift',
       delimiters: ['${','}'],
       data: {
@@ -850,22 +886,21 @@
           this.getBrands();
           this.getShops();
         
-      },
-
-      methods: {
-     
-            getCategories: function() {
-                let api_url = '/api/category/';
-                this.loading = true;
-                 this.$http.get(api_url)
-                .then((response) => {
-                    this.categories = response.data;
-                    this.loading = false;
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
+      }, 
+      methods: 
+      {
+        getCategories: function() {
+          let api_url = '/api/category/';
+          this.loading = true;
+          this.$http.get(api_url)
+          .then((response) => {
+            this.categories = response.data;
+            this.loading = false;
+          })
+          .catch((err) => {
+            this.loading = false;
+            console.log(err);
+          })
         },
         getBrands: function (){
           let api_url = '/api/brand/';
@@ -875,7 +910,6 @@
               .then((response) => {
                 this.brands = response.data;
                 this.loading = false;
-              
               })
               .catch((err) => {
                 this.loading = false;
@@ -929,8 +963,18 @@
         shifts:[],
         shift_given:[],
         shift_taken:[],
+        // x:[0, 1],
+    //     shift_taken: {
+    //     "stock_shift_p": 0,     "stock_shift_q": 0,    "stock_shift_n": 0,
+    // "stock_shift_d": 0,
+    // "stock_shift_l": 0,
+    // "stock_shift_xg": 0,
+    // "stock_shift_y": 0
+
+    //     },
         brandsSize:[],
         categories:[],
+        op_stk_data:[],
         loading: true,
         rate: 00,
         currentInvoice: {},
@@ -942,7 +986,7 @@
           'close_qty_y': 0, 'close_sale_p': 0,'close_sale_q': 0, 'close_sale_n': 0, 'close_sale_d': 0, 'close_sale_l': 0,
           'close_sale_xg': 0,    'close_sale_y': 0,'total_sale': 0
           },
-          newOpening: {
+        newOpening: {
                     'brand_id': null, 'open_shop_id': null, 'open_date': null, 'open_p': 0, 
                     'open_q': 0, 'open_n': 0, 'open_d': 0,'open_l': 0, 'open_xg': 0,   
                     'open_y': 0,
@@ -954,27 +998,29 @@
           this.getBrands();
           this.getShops();
           this.getBrandsSize();
-          this.getShiftData();
+          // this.getShiftData();
+          // this.getOpenData();
       },
-
+      computed: {
+        sold_p() {          
+      	return (parseInt(this.op_stk_data.open_p) + parseInt(this.shift_given.stock_shift_p) + parseInt(this.shift_taken.stock_shift_p)) || 0;
+      }
+    },
+  
       methods: {
-       
-     
-            getCategories: function() {
-                let api_url = '/api/category/';
-                 this.$http.get(api_url)
-                .then((response) => {
-                    this.categories = response.data;
-                   
-              })
-              .catch((err) => {
-                console.log(err);
-              })
+        getCategories: function() {
+          let api_url = '/api/category/';
+          this.$http.get(api_url)
+          .then((response) => {
+            this.categories = response.data;
+            })
+          .catch((err) => {
+            console.log(err);
+            })  
         },
         getBrands: function (){
           let api_url = '/api/brand/';
           api_url = `/api/brand/?search=${this.newClosing.category_id}`;
-          
           this.$http.get(api_url)
               .then((response) => {
                 this.brands = response.data;
@@ -986,7 +1032,7 @@
                 console.log(err);
               })
         },
-            getShops: function() {
+        getShops: function() {
               let api_url = '/api/shop/';
               this.loading = true;
               this.$http.get(api_url)
@@ -999,19 +1045,18 @@
                   console.log(err);
                 })
             },
-            addClosing: function() {
-                this.newClosing['close_shop_id'] = {{shop.shop_id}} ;
-                this.loading = true;
-                this.$http.post(`/api/close/`,this.newClosing)
-                .then((response) => {
-
-                    this.loading = true;
-                    this.addOpening();
-                })
-                .catch((err) => {
-                    this.loading = true;
-                    console.log(err);
-                })
+        addClosing: function() {
+          this.newClosing['close_shop_id'] = {{shop.shop_id}} ;
+          this.loading = true;
+          this.$http.post(`/api/close/`,this.newClosing)
+          .then((response) => {
+            this.loading = true;
+            this.addOpening();
+            })
+          .catch((err) => {
+            this.loading = true;
+            console.log(err);
+          })
         },
         addOpening: function() {
           this.newOpening['brand_id'] = this.newClosing['brand_id']  ;
@@ -1043,6 +1088,24 @@
           this.$http.get(api_url)
               .then((response) => {
                 this.brandsSize = response.data;
+                
+                // var reformattedArray = this.brandsSize.map(obj =>{ 
+                //   var rObj = {};
+                //   rObj[obj.quantity_name] = obj.quantity_bottles;
+                //   return rObj;
+
+                //   });
+             
+                  var result = {};
+                  for (var i = 0; i < this.brandsSize.length; i++) {
+                    result[this.brandsSize[i].quantity_name] = this.brandsSize[i].quantity_bottles;
+                  }
+                  
+              //  let result = this.brandsSize.map(a => (a.quantity_name)   + a.quantity_bottles);
+              //  this.brandsSize = JSON.stringify(Object.assign({}, reformattedArray));;
+              console.log("some:"+result);
+              this.brandsSize = result;
+
                 this.loading = false;
               })
               .catch((err) => {
@@ -1050,6 +1113,25 @@
                 console.log(err);
               })
         },
+        getOpenData: function(){
+          let api_url = '/api/open/';
+          api_url = `/api/open/?search=${this.newClosing.brand_id}`;
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.op_stk_data = response.data;
+                let op_stk_filt = this.op_stk_data.find(u => (new Date (Date.parse(u.open_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.open_shop_id === {{shop.shop_id}});
+                
+                this.op_stk_data = op_stk_filt;
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+
+
+        }, 
         getShiftData: function (){
          
           let api_url = '/api/shift/';
@@ -1060,20 +1142,26 @@
                // this.shifts = response.data;
                
                     let sft_data= response.data;
-                    let sft_gvn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_from === 2);
+                    let sft_gvn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_from === {{shop.shop_id}});
+                    let sft_tkn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_to === {{shop.shop_id}});
+
                     delete sft_gvn.brand_id;
                     delete sft_gvn.stock_shift_date;
                     delete sft_gvn.stock_shift_to;
                     delete sft_gvn.stock_shift_from;
                     this.shift_given = sft_gvn;
-                    let sft_tkn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_to === 5);
+                    console.log("given:" + sft_gvn);
+                    //this.shift_given = sft_gvn;
                     delete sft_tkn.brand_id;
                     delete sft_tkn.stock_shift_date;
                     delete sft_tkn.stock_shift_to;
                     delete sft_tkn.stock_shift_from;
+                    console.log("data found as tken");
+                    console.log(sft_tkn);
                     this.shift_taken = sft_tkn;
+                    this.getOpenData();
           
-                    console.log(this.shifts);
+                    //console.log(this.shifts);
                     
                     console.log("slectdt: " +this.newClosing.close_date );
                    // this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles; 
