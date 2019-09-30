@@ -62,11 +62,12 @@ class Quantity(models.Model):
          return str(self.quantity_name)
 
 class BmsUser(models.Model):
+    USER_ROLE = ( ('A', 'ADMIN'), ('S', 'SUBADMIN'), ('U', 'USER') )
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     user_id = models.IntegerField(primary_key=True, verbose_name = 'User Id')
     user_first_name = models.CharField(max_length=50, verbose_name = 'First Name')
     user_last_name = models.CharField(max_length=50, verbose_name = 'Last Name')
-    user_role = models.IntegerField(verbose_name = 'User Role')
+    user_role = models.CharField(max_length=1, choices=USER_ROLE, default='U', verbose_name = 'User Role')
 
     class Meta:
         verbose_name = 'Bms User'

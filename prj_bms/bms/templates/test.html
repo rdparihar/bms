@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>BMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  {% load static %}
+    
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  </head>
+
+  <body>
+      {% include 'topnavbar.html' %}
+      <div class="container-fluid">
+        <div class="row">
+        {% include 'sidenavbar.html' %}
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          
+           
+            
+    
+<div id="app">
+        <table>
+        <tr v-for="(invoice_product, k) in invoice_products" :key="k">
+            <td scope="row" class="trashIconContainer">
+                <i class="far fa-trash-alt" @click="deleteRow(k, invoice_product)"></i>
+            </td>
+            <td>
+                <input class="form-control" type="text" v-model="invoice_product.product_no" />
+            </td>
+            <td>
+                <input class="form-control" type="text" v-model="invoice_product.product_name" />
+            </td>
+            <td>
+                <input class="form-control text-right" type="number" min="0" step=".01" v-model="invoice_product.product_price" @change="calculateLineTotal(invoice_product)"
+                />
+            </td>
+            <td>
+                <input class="form-control text-right" type="number" min="0" step=".01" v-model="invoice_product.product_qty" @change="calculateLineTotal(invoice_product)"
+                />
+            </td>
+            <td>
+                <input readonly class="form-control text-right" type="number" min="0" step=".01" v-model="invoice_product.line_total" />
+            </td>
+        </tr>
+        </table>
+        <button type='button' class="btn btn-info" @click="addNewRow">
+            <i class="fas fa-plus-circle"></i>
+            Add
+        </button>
+        </div>
+        
+
+
+
+          </main>
+                  </div>
+              </div>
+    
+
+  <!-- bootrtap js files -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ <!-- Icons -->
+ <script src="{% static 'js/vendor/feather.min.js' %}"></script>
+  <script>
+    feather.replace()
+  </script>
+  <!-- vue.js files -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
+  <script type="text/javascript">
+    Vue.http.headers.common['X-CSRFToken'] = "{{ csrf_token }}";
+
+    
+var app = new Vue({
+    el: "#app",
+    data: {
+        invoice_subtotal: 0,
+        invoice_total: 0,
+        invoice_tax: 5,
+        invoice_products: [{
+            product_no: '',
+            product_name: '',
+            product_price: '',
+            product_qty: '',
+            line_total: 0
+        }]
+    },
+    
+    methods: {
+        saveInvoice() {
+            console.log(JSON.stringify(this.invoice_products));
+        },
+        calculateTotal() {
+            var subtotal, total;
+            subtotal = this.invoice_products.reduce(function (sum, product) {
+                var lineTotal = parseFloat(product.line_total);
+                if (!isNaN(lineTotal)) {
+                    return sum + lineTotal;
+                }
+            }, 0);
+
+            this.invoice_subtotal = subtotal.toFixed(2);
+
+            total = (subtotal * (this.invoice_tax / 100)) + subtotal;
+            total = parseFloat(total);
+            if (!isNaN(total)) {
+                this.invoice_total = total.toFixed(2);
+            } else {
+                this.invoice_total = '0.00'
+            }
+        },
+        calculateLineTotal(invoice_product) {
+            var total = parseFloat(invoice_product.product_price) * parseFloat(invoice_product.product_qty);
+            if (!isNaN(total)) {
+                invoice_product.line_total = total.toFixed(2);
+            }
+            this.calculateTotal();
+        },
+        deleteRow(index, invoice_product) {
+            var idx = this.invoice_products.indexOf(invoice_product);
+            console.log(idx, index);
+            if (idx > -1) {
+                this.invoice_products.splice(idx, 1);
+            }
+            this.calculateTotal();
+        },
+        addNewRow() {
+            this.invoice_products.push({
+                product_no: '',
+                product_name: '',
+                product_price: '',
+                product_qty: '',
+                line_total: 0
+            });
+        }
+    }
+});
+</script>
+
+  </body>
+  </html>
+    
+    
+    
+    
+   
+ 

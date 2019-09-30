@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>BMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  {% load static %}
+    
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  </head>
+
+  <body>
+      {% include 'topnavbar.html' %}
+      <div class="container-fluid">
+        <div class="row">
+
+          {% include 'sidenavbar.html' %}
+
+          
+
+          {% if isAdmin %}
+        
+
+  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+      <div id="starting">
+        
+        <div class="container">
+            <div class="alert alert-warning" v-if="serverError">
+                <strong>Error!</strong>  Server returned error, ${ msg }.
+              </div>
+          <div class="row">
+              
+            
+            <div class="modal-body invoice-box ">
+                <form v-on:submit.prevent="addBmsUser()">
+                    <div class="row">
+                        <div class="col">
+                            <label for="username">Username</label>
+                            <select v-model.number="newBmsUser.username" name="newBmsUser.username" class="form-control" @change="updateUserId()">
+                              <option v-for="user in users" :value="user.id">${user.username} </option>   
+                            </select>
+                        </div>
+
+                        
+                            <input
+                            type="hidden"
+                            id="user_id"
+                            class="form-control"
+                            name="newBmsUser.user_id"
+                            placeholder="user_id"
+                            v-model="newBmsUser.user_id"
+                            required="required"
+                            rows="3">
+                        
+                        
+                        <div class="col">
+                            <label for="user_first_name">First Name</label>
+                            <input
+                            type="text"
+                            id="user_first_name"
+                            class="form-control"
+                            name="newBmsUser.user_first_name"
+                            placeholder="Enter First Name"
+                            v-model="newBmsUser.user_first_name"
+                            required="required"
+                            rows="3">
+                        </div>
+                        
+                        <div class="col">
+                            <label for="user_last_name">Last Name</label>
+                            <input
+                            type="text"
+                            id="user_last_name"
+                            class="form-control"
+                            name="newBmsUser.user_last_name"
+                            placeholder="Enter Last Name"
+                            v-model="newBmsUser.user_last_name"
+                            required="required"
+                            rows="3">
+                        </div>
+                        
+                        
+
+                        <div class="col">
+                            <label for="user_role"> Role</label>
+                            <select v-model.number="newBmsUser.user_role" name="newBmsUser.user_role" 
+                              class="form-control" >
+                              <option value="S">Sub Admin</option>
+                              <option value="U">User </option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="brand_id">&nbsp;</label>
+
+                                <button type="submit" class="btn btn-success form-control">Create</button>
+                          
+                        </div>
+                      </div>
+                </form>
+            </div>
+          </div>
+
+<br>
+<div class="row">
+ 
+
+              {% if bms_suadmin %}
+
+              {% for bms_user in bms_users %}
+
+              {% endfor %}
+              {% endif %}
+          
+          </div>
+          <div class="row">
+              {% if bms_suadmin %}
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">User id</th>
+                      <th scope="col">Username</th>
+                      <th scope="col"> First</th>
+                      <th scope="col"> Last Name</th>
+                      <th scope="col"> Role</th>
+    
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>{% for sbadmin in bms_suadmin %}
+                    <tr>
+                      <th scope="row">{{sbadmin.user_id}}</th>
+                      <td><a href="{{sbadmin.user_id }}">{{sbadmin.username}}</a> </td>
+                      <td>{{sbadmin.user_first_name}} </td>
+                      <td>{{sbadmin.user_last_name}}</td>
+                      <td>{{sbadmin.user_role}}</td>
+                      <td>
+                         
+                        <button class="btn btn-info" v-on:click="getBmsUser({{sbadmin.user_id}})">Edit</button>
+                      
+                        <button class="btn btn-danger" v-on:click="deleteBmsUser({{sbadmin.user_id}})">Delete</button>
+                        
+    
+                      </td>
+                      {% endfor %}
+                    </tr>
+                  </tbody>
+                 
+                </table>
+                {% else %}
+                <p>There are no books in the library. {{user.name}}</p>
+                                  {% endif %} 
+      
+          </div>
+          
+          <div class="row">
+             <!-- Add BmsUser Modal -->
+             <div class="modal fade" id="addBmsUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">New BmsUser</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form v-on:submit.prevent="addBmsUser()">
+                    <div class="modal-body">
+                        <div class="form-group">
+                          <label for="username">User Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            placeholder="Enter Username"
+                            v-model="newBmsUser.username"
+                            required="required" >
+                        </div>
+                        <div class="form-group">
+                          <label for="bmsuser_owner">BmsUser Owner</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="bmsuser_owner"
+                            placeholder="Enter BmsUser Owner"
+                            v-model="newBmsUser.bmsuser_owner"
+                            required="required"
+                            rows="3">
+                        </div>
+                        <div class="form-group">
+                            
+                            <input
+                              type="hidden"
+                              class="form-control"
+                              id="bmsuser_admin"
+                              :value="{{user.id}}"
+                              name="newBmsUser.bmsuser_admin"
+                              placeholder="{{user}}"
+                              
+                              required="required"
+                              rows="3" >
+                          </div>
+                        <div class="form-group">
+                          <label for="bmsuser_address">BmsUser Address</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="bmsuser_address"
+                            placeholder="Enter BmsUser Address"
+                            v-model="newBmsUser.bmsuser_address"
+                            required="required"
+                            rows="3">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="loading" v-if="loading===true">Loading&#8230;</div>
+              </div>
+              <!-- End of add bmsuser modal -->
+              <!-- Edit BmsUser Modal -->
+              <div class="modal fade" id="editBmsUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">EDIT Subadmins</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form v-on:submit.prevent="updateBmsUser()">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="user_id">User ID</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="user_id"
+                                  placeholder="Userid"
+                                  v-model="currentBmsUser.user_id"
+                                  required="required"
+                                  rows="3" readonly>
+                              </div>
+                          
+                            
+                            <div class="form-group">
+                              <label for="user_first_name">First Name</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="user_first_name"
+                                placeholder="Enter First Name"
+                                v-model="currentBmsUser.user_first_name"
+                                required="required"
+                                rows="3">
+                            </div>
+                           
+                    <div class="form-group">
+                              <label for="user_last_name">Last Name</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="user_last_name"
+                                placeholder="Enter Last Name"
+                                v-model="currentBmsUser.user_last_name"
+                                required="required"
+                                rows="3">
+                            </div>
+                            <div class="form-group">
+                                <label for="user_role"> Role</label>
+                            <select v-model="currentBmsUser.user_role" name="currentBmsUser.user_role" 
+                              class="form-control" >
+                              <option value="S">Sub Admin</option>
+                              <option value="U">User </option>
+                            </select>
+                               
+
+
+                        </div>
+                        
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                        </form>
+                  </div>
+                </div>
+                <div class="loading" v-if="loading===true">Loading&#8230;</div>
+              </div>
+              <!-- End of edit bmsuser modal -->
+  
+          </div>
+        </div>
+      </div>
+      
+  </main>
+    
+  {% else %}
+  <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="alert alert-danger">
+        <h3> <strong>Error !</strong> Not Authorised. </h3>
+    </div>
+   
+  </div>
+  
+  
+  {% endif %}
+</div>
+        </div>
+
+
+<!-- bootrtap js files -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- Icons -->
+<script src="{% static 'js/vendor/feather.min.js' %}"></script>
+<script>
+feather.replace()
+</script>
+<!-- vue.js files -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
+
+<script type="text/javascript">
+  Vue.http.headers.common['X-CSRFToken'] = "{{ csrf_token }}";
+  new Vue({
+    el: '#starting',
+    delimiters: ['${','}'],
+    data: {
+      bmsusers: [],
+      users:[],
+      userid: null,
+      loading: true,
+      serverError: false,
+      currentBmsUser: {},
+      message: null,
+      newBmsUser: { 'bmsuser_name': null, 'bmsuser_owner': null, 'bmsuser_admin': null },
+      search_term: '',
+    },
+    mounted: function() {
+      this.getBmsUsers();
+      this.getUser();
+    },
+    methods: {
+      getUser: function(){
+        let api_url = '/api/user/';
+        this.loading = true;
+        this.$http.get(api_url)
+        .then((response) =>
+        {
+          this.users = response.data;
+          this.loading = false;
+        })
+        .catch((err)=>{
+          this.loading = false;
+          console.log(err);
+        })
+
+      },
+      updateUserId: function(){
+        this.newBmsUser.user_id = this.newBmsUser.username;
+
+
+      },
+      getBmsUsers: function() {
+        let api_url = '/api/bmsuser/';
+        if(this.search_term!==''||this.search_term!==null) {
+          api_url = `/api/bmsuser/?search=${this.search_term}`;
+        }
+        this.loading = true;
+        this.$http.get(api_url)
+            .then((response) => {
+              this.bmsusers = response.data;
+              this.loading = false;
+            }
+            
+            
+            
+            )
+            .catch((err) => {
+              this.loading = false;
+              console.log(err);
+            })
+      },
+      getBmsUser: function(id) {
+        this.loading = true;
+        console.log(this.newBmsUser.edit);
+        this.$http.get(`/api/bmsuser/${id}/`)
+            .then((response) => {
+              this.currentBmsUser = response.data;
+              console.log(response.data);
+              $("#editBmsUserModal").modal('show');
+              this.loading = false;
+            })
+            .catch((err) => {
+              this.loading = false;
+              console.log(err);
+            })
+      },
+      addBmsUser: function() {
+        this.loading = true;
+        // this.newBmsUser['bmsuser_admin'] = {{user.id}};
+        
+        this.$http.post(`/api/bmsuser/`,this.newBmsUser)
+            .then((response) => {
+              this.loading = true;
+              location.reload();
+              this.getBmsUsers();
+
+            }, function(err) {
+                if (err.status == 400) {
+                  this.loading = false;
+                  this.serverError= true;
+                  this.msg = "User with this User Id already exists. ";
+                  // alert("400 :"+this.msg);
+                  this.getBmsUsers();
+                }
+              }
+            
+            
+            )
+            .catch((err) => {
+              this.loading = true;
+              console.log(err);
+            })
+      },
+      updateBmsUser: function() {
+        this.loading = true;
+        // this.currentBmsUser['bmsuser_admin'] = {{user.id}};
+        this.$http.put(`/api/bmsuser/${this.currentBmsUser.user_id}/`, this.currentBmsUser)
+            .then((response) => {
+              this.loading = false;
+              this.currentBmsUser = response.data;
+              location.reload();
+              this.getBmsUsers();
+            })
+            .catch((err) => {
+              this.loading = false;
+              console.log(err);
+            })
+      },
+      deleteBmsUser: function(id) {
+        var conf = confirm("Are you sure");
+        if (conf){
+        this.loading = true;
+        this.$http.delete(`/api/bmsuser/${id}/`)
+            .then((response) => {
+              alert("Deleted");
+              this.loading = false;
+              location.reload();
+              this.getBmsUsers();
+            })
+            .catch((err) => {
+              this.loading = false;
+              console.log(err);
+            })
+          }
+      }
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

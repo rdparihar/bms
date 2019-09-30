@@ -17,7 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 from .routers import router
 from django.views.generic import TemplateView
-from django.contrib.auth import views
+# from django.contrib.auth import views
+from django.contrib.auth import views as auth_views
+
 from django.conf.urls import url
 
 
@@ -26,9 +28,15 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('bms.urls'), name= 'bms'),
+    path('', include('bms.urls')),
+   
+
     path('api/', include(router.urls)),
     path('accounts/', include('django.contrib.auth.urls'), name='account'),
-    path('login/', include('django.contrib.auth.urls'), name='login'),
-    path('logout/', include('django.contrib.auth.urls'), name='logout'),
+    # path('login/', include('django.contrib.auth.urls'), name='login'),
+    # path('logout/', include('django.contrib.auth.urls'), {'template_name': 'logged_out.html'}, name='logout'),
+    # path('logout/', login_views,   name='logout'),
+    path ('accounts/login/', auth_views.LoginView.as_view(), name="login"),
+    path ('accounts/logout/', auth_views.LogoutView.as_view(), name="logout")
+
 ]

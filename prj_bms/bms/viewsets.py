@@ -15,6 +15,7 @@ from .models import StockOpen
 from .serializers import StockOpenSerializer , ReadStockOpenSerializer
 from .models import StockClose
 from .serializers import StockCloseSerializer , ReadStockCloseSerializer
+from rest_framework.permissions import AllowAny
 
 
 
@@ -45,11 +46,12 @@ class BrandViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
             return ReadBrandSerializer
     serializer_class = BrandSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ['category_id__category_id',]
+    search_fields = ['category_id__category_id','brand_name',]
 
 class UserViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
     queryset = User.objects.all()
+    permission_classes = (AllowAny,)
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ReadUserSerializer
@@ -58,14 +60,16 @@ class UserViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
         else:
             return ReadUserSerializer
     serializer_class = UserSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['username','user_id',]
    
 class BmsUserViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
     queryset = BmsUser.objects.all()
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return ReadBmsUserSerializer
-        elif self.request.method == 'POST':
+            return BmsUserSerializer
+        elif self.request.method == 'POST' or 'PUT':
             return BmsUserSerializer
         else:
             return ReadBmsUserSerializer
@@ -77,7 +81,7 @@ class ShopViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ReadShopSerializer
-        elif self.request.method == 'POST':
+        elif self.request.method == 'POST' or 'PUT':
             return ShopSerializer
         else:
             return ReadShopSerializer
@@ -104,14 +108,14 @@ class ShiftViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     queryset = Shift.objects.all()
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return ReadShiftSerializer
+            return ShiftSerializer
         elif self.request.method == 'POST':
             return ShiftSerializer
         else:
             return ReadShiftSerializer
     serializer_class = ShiftSerializer 
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('brand_id','stock_shift_date','stock_shift_from','stock_shift_to')
+    search_fields = ['brand_id__brand_id','stock_shift_date','stock_shift_from','stock_shift_to__shop_id']
 
 class InvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL

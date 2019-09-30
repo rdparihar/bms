@@ -42,12 +42,17 @@ class ReadQuantitySerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['id','username', 'first_name','last_name', 'password']
+    def create(self, validated_data):
+        user = super(UserSerializer, self).create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 class ReadUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['username', 'first_name','last_name','id']
 
 class BmsUserSerializer(serializers.ModelSerializer):
     username = serializers.PrimaryKeyRelatedField(read_only=False, queryset=User.objects.all())
@@ -89,6 +94,7 @@ class ShiftSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Shift
         fields = ['brand_id','stock_shift_date','stock_shift_from','stock_shift_to','stock_shift_p','stock_shift_q','stock_shift_n','stock_shift_d','stock_shift_l','stock_shift_xg','stock_shift_y']
+
 
 
 class ReadInvoiceSerializer(serializers.HyperlinkedModelSerializer):

@@ -15,8 +15,11 @@
   </head>
 
   <body>
-      {% include 'topnavbar.html' %}
+    {% include 'topnavbar.html' %}
+      {% if user.is_authenticated %}
+      
       <div class="container-fluid">
+
         <div class="row">
 
           {% include 'sidenavbar.html' %}
@@ -26,58 +29,65 @@
    
 
   <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-      <div id="starting"><ul class="nav nav-pills ">
-                  <h3>Stock List </p>
-                  
-                 </h3>
-                  </ul>
-        <div class="container">
-            <h1>
-          
-                <button  type="button" class="btn btn-success" data-toggle="modal" data-target="#addShopModal">Add a Shop</button>
-                </h1>
+      <div id="starting">
+        <ul class="nav nav-pills ">
+          <h3>Shop List</h3>
+
+
        
-          
-        
+
+
+        </ul>
+        <div class="container">
+          <h1>
+            <button  type="button" class="btn btn-success" data-toggle="modal" data-target="#addShopModal">Add a Shop</button>
+          </h1>
           <div class="row">
-              
-              
-                  <table class="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">Shop ID</th>
-                          <th scope="col">Shop Name</th>
-                          <th scope="col">Shop Owner</th>
-                          <th scope="col">Shop Address</th>
+              {% if shop_list %}
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Shop ID</th>
+                    <th scope="col">Shop Name</th>
+                    <th scope="col">Shop Owner</th>
+                    <th scope="col">Shop Address</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  {% for shop in shop_list %}
+                  <tr>
+                    <th scope="row">{{shop.shop_id}}</th>
+                    <td><a href="{{ shop.shop_id }}">{{shop.shop_name}}</a> </td>
+                    <td>{{shop.shop_owner}}</td>
+                    <td>{{shop.shop_address}}</td>
+                    <td>
+                      <button class="btn btn-info" name="newShop.edit" value="{{shop.shop_id}}" v-on:click="getShop({{shop.shop_id}})">Edit</button>
+                    
+                      <button class="btn btn-danger" name="newShop.delete" value="{{shop.shop_id}}" v-on:click="deleteShop({{shop.shop_id}})">Delete</button>
+                      
 
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      {% if shop_list %}
-                      <tbody>
-                        
-                        
-                            {% for shop in shop_list %}
-<tr>
-                          <th scope="row">{{shop.shop_id}}</th>
-                          <td><a href="{{ shop.shop_id }}">{{shop.shop_name}}</a> </td>
-                          <td>{{shop.shop_owner}}</td>
-                          <td>{{shop.shop_address}}</td>
-                          <td>
-                             
-                            <button class="btn btn-info" v-on:click="getShop(shop.shop_id)">Edit</button>
-                          
-                            <button class="btn btn-danger" v-on:click="deleteShop(shop.shop_id)">Delete</button>
-                            
+                    </td>
+                    {% endfor %}
+                  </tr>
+                </tbody>
+                {% else %}
+                {% if isAdmin %}
+                    <div class="alert alert-info">
+                        <h3> <strong>Admin  !</strong> Create a shop or go to Home page . </h3>
+                    </div>
+                   
+                  
+                {% else %}
+                <div class="alert alert-info">
+                    <h3> <strong></strong> There are no Shops.</h3>
+                </div>
+                
+                {% endif %}
 
-                          </td>
-                          {% endfor %}
-                        </tr>
-                      </tbody>
-                      {% else %}
-            <p>There are no books in the library.</p>
-                              {% endif %}  
-                    </table>
+                        {% endif %}  
+            </table>
           
         
              <!-- Add Shop Modal -->
@@ -114,7 +124,14 @@
                             rows="3">
                         </div>
                         <div class="form-group">
-                            
+                            {% if isAdmin %}
+                            <label for="shop_admin"></label>
+                                <label for="shop_admin">Assign to Subadmins</label>
+                                <select v-model.number="newShop.shop_admin" name="newBmsUser.shop_admin" class="form-control" >
+                                  <option v-for="user in subadmins" value="user.user_id">${user.user_first_name} ${user.user_last_name} - ( ${user.username.username} )</option>   
+                                </select>
+                          
+                            {% else %}
                             <input
                               type="hidden"
                               class="form-control"
@@ -125,6 +142,7 @@
                               
                               required="required"
                               rows="3" >
+                              {% endif %}
                           </div>
                         <div class="form-group">
                           <label for="shop_address">Shop Address</label>
@@ -159,56 +177,57 @@
                       </button>
                     </div>
                     <form v-on:submit.prevent="updateShop()">
-                    <div class="modal-body">
-                                <div class="form-group">
-                          <label for="shop_name">Shop Heading</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="shop_name"
-                            placeholder="Enter Shop Heading"
-                            v-model="currentShop.shop_name"
-                            required="required" >
+                        <div class="modal-body">
+                                    <div class="form-group">
+                              <label for="shop_name">Shop Heading</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="shop_name"
+                                placeholder="Enter Shop Heading"
+                                v-model="currentShop.shop_name"
+                                required="required" >
+                            </div>
+                            <div class="form-group">
+                              <label for="shop_owner">Shop Owner</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="shop_owner"
+                                placeholder="Enter Shop Owner"
+                                v-model="currentShop.shop_owner"
+                                required="required"
+                                rows="3">
+                            </div>
+                            <div class="form-group">
+                                <input
+                                  type="hidden"
+                                  class="form-control"
+                                  id="shop_admin"
+                                 id="shop_admin"
+                                  :value="{{user.id}}"
+                                  name="currentShop.shop_admin"
+                                  placeholder="{{user}}"
+                                  required="required"
+                                  rows="3">
+                              </div>
+                    <div class="form-group">
+                              <label for="shop_address">Shop Address</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="shop_address"
+                                placeholder="Enter Shop Address"
+                                v-model="currentShop.shop_address"
+                                required="required"
+                                rows="3">
+                            </div>
                         </div>
-                        <div class="form-group">
-                          <label for="shop_owner">Shop Desc</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="shop_owner"
-                            placeholder="Enter Shop Desc"
-                            v-model="currentShop.shop_owner"
-                            required="required"
-                            rows="3">
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
-                        <div class="form-group">
-                            <label for="shop_admin">Shop Admin</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="shop_admin"
-                              placeholder="Enter Shop Admin"
-                              v-model="currentShop.shop_admin"
-                              required="required"
-                              rows="3">
-                          </div>
-                <div class="form-group">
-                          <label for="shop_address">Shop Address</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="shop_address"
-                            placeholder="Enter Shop Address"
-                            v-model="currentShop.shop_address"
-                            required="required"
-                            rows="3">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                    </form>
+                        </form>
                   </div>
                 </div>
                 <div class="loading" v-if="loading===true">Loading&#8230;</div>
@@ -217,11 +236,12 @@
   
           </div>
         </div>
-        </div>
-    </main>
+      </div>
+      
+  </main>
             </div>
         </div>
-
+{% endif %}
 
 <!-- bootrtap js files -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -235,7 +255,7 @@ feather.replace()
 <!-- vue.js files -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
-
+{% if user.is_authenticated %}
 <script type="text/javascript">
   Vue.http.headers.common['X-CSRFToken'] = "{{ csrf_token }}";
   new Vue({
@@ -243,6 +263,7 @@ feather.replace()
     delimiters: ['${','}'],
     data: {
       shops: [],
+      subadmins:[],
       loading: true,
       currentShop: {},
       message: null,
@@ -251,8 +272,29 @@ feather.replace()
     },
     mounted: function() {
       this.getShops();
+      this.getBmsUsers();
     },
     methods: {
+      getBmsUsers: function() {
+        let api_url = '/api/bmsuser/';
+        this.loading = true;
+        this.$http.get(api_url)
+            .then((response) => {
+              this.subadmins = response.data;
+
+              let sub= response.data;
+                console.log(sub);
+                let obj = sub.filter(u => u.user_role == "S");
+                console.log(obj);
+                this.subadmins = obj;
+
+              this.loading = false;
+            })
+            .catch((err) => {
+              this.loading = false;
+              console.log(err);
+            })
+      },
       getShops: function() {
         let api_url = '/api/shop/';
         if(this.search_term!==''||this.search_term!==null) {
@@ -269,8 +311,10 @@ feather.replace()
               console.log(err);
             })
       },
+
       getShop: function(id) {
         this.loading = true;
+        console.log(this.newShop.edit);
         this.$http.get(`/api/shop/${id}/`)
             .then((response) => {
               this.currentShop = response.data;
@@ -301,6 +345,7 @@ feather.replace()
       },
       updateShop: function() {
         this.loading = true;
+        this.currentShop['shop_admin'] = {{user.id}};
         this.$http.put(`/api/shop/${this.currentShop.shop_id}/`, this.currentShop)
             .then((response) => {
               this.loading = false;
@@ -313,22 +358,27 @@ feather.replace()
             })
       },
       deleteShop: function(id) {
+        var conf = confirm("Are you sure");
+        if (conf){
         this.loading = true;
         this.$http.delete(`/api/shop/${id}/`)
             .then((response) => {
+              alert("Deleted");
               this.loading = false;
+              location.reload();
               this.getShops();
             })
             .catch((err) => {
               this.loading = false;
               console.log(err);
             })
+          }
       }
     }
   });
 </script>
 
-
+{% endif %}
 
 </body>
 </html>

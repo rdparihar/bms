@@ -15,6 +15,7 @@
 
   <body>
       {% include 'topnavbar.html' %}
+      {% if user.is_authenticated %}
       <div class="container-fluid">
         <div class="row">
 
@@ -40,11 +41,8 @@
                               <table class="table">
                                 <thead>
                                   <tr>
-                                    <th scope="col">Quantity ID</th>
                                     <th scope="col">Quantity Name</th>
-                                    <th scope="col">Quantity Owner</th>
-                                    <th scope="col">Quantity Address</th>
-
+                                    <th scope="col">Quantity Bottles</th>
                                     <th scope="col">Action</th>
                                   </tr>
                                 </thead>
@@ -55,8 +53,8 @@
                                     
                                     <td>${quantity.quantity_bottles}</td>
                                     <td>
-                                      <button class="btn btn-info" v-on:click="getQuantity(quantity.quantity_id)">Edit</button>
-                                      <button class="btn btn-danger" v-on:click="deleteQuantity(quantity.quantity_id)">Delete</button>
+                                      <button class="btn btn-info" v-on:click="getQuantity(quantity.quantity_name)">Edit</button>
+                                      <button class="btn btn-danger" v-on:click="deleteQuantity(quantity.quantity_name)">Delete</button>
                                     </td>
                                   </tr>
                                 </tbody>
@@ -84,27 +82,17 @@
                                             required="required" >
                                         </div>
                                         <div class="form-group">
-                                          <label for="quantity_owner">Quantity Owner</label>
+                                          <label for="quantity_bottles"> Bottles</label>
                                           <input
                                             type="text"
                                             class="form-control"
-                                            id="quantity_owner"
-                                            placeholder="Enter Quantity Owner"
-                                            v-model="newQuantity.quantity_owner"
+                                            id="quantity_bottles"
+                                            placeholder="Enter the number of Bottles"
+                                            v-model.number="newQuantity.quantity_bottles"
                                             required="required"
                                             rows="3">
                                         </div>
-                                        <div class="form-group">
-                                          <label for="quantity_address">Quantity Address</label>
-                                          <input
-                                            type="text"
-                                            class="form-control"
-                                            id="quantity_address"
-                                            placeholder="Enter Quantity Address"
-                                            v-model="newQuantity.quantity_address"
-                                            required="required"
-                                            rows="3">
-                                        </div>
+                                     
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
@@ -121,7 +109,7 @@
                                 <div class="modal-dialog" role="document">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLongTitle">EDIT Quantity</h5>
+                                      <h5 class="modal-title" id="exampleModalLongTitle">Update Quantity</h5>
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                       </button>
@@ -129,37 +117,27 @@
                                     <form v-on:submit.prevent="updateQuantity()">
                                     <div class="modal-body">
                                                 <div class="form-group">
-                                          <label for="quantity_name">Quantity Heading</label>
+                                          <label for="quantity_name">Quantity Name</label>
                                           <input
                                             type="text"
                                             class="form-control"
                                             id="quantity_name"
-                                            placeholder="Enter Quantity Heading"
+                                            placeholder="Enter the name of Quantity"
                                             v-model="currentQuantity.quantity_name"
                                             required="required" >
                                         </div>
                                         <div class="form-group">
-                                          <label for="quantity_owner">Quantity Desc</label>
+                                          <label for="quantity_bottles">Bottles</label>
                                           <input
                                             type="text"
                                             class="form-control"
-                                            id="quantity_owner"
-                                            placeholder="Enter Quantity Desc"
-                                            v-model="currentQuantity.quantity_owner"
+                                            id="quantity_bottles"
+                                            placeholder="Enter # Bottles"
+                                            v-model="currentQuantity.quantity_bottles"
                                             required="required"
                                             rows="3">
                                         </div>
-                                <div class="form-group">
-                                          <label for="quantity_address">Quantity Address</label>
-                                          <input
-                                            type="text"
-                                            class="form-control"
-                                            id="quantity_address"
-                                            placeholder="Enter Quantity Address"
-                                            v-model="currentQuantity.quantity_address"
-                                            required="required"
-                                            rows="3">
-                                        </div>
+                              
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
@@ -186,7 +164,7 @@
             </div>
       </div>
     
-
+{% endif %}
   <!-- bootrtap js files -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -272,10 +250,13 @@
               })
         },
         deleteQuantity: function(id) {
+          var conf = confirm("Delete: Are you sure ?");
+          if (conf){
           this.loading = true;
           this.$http.delete(`/api/quantity/${id}/`)
               .then((response) => {
                 this.loading = false;
+                alert("Deleted")
                 this.getQuantities();
               })
               .catch((err) => {
@@ -283,6 +264,7 @@
                 console.log(err);
               })
         }
+      }
       }
     });
   </script>
