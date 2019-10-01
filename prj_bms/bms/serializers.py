@@ -104,7 +104,7 @@ class ReadInvoiceSerializer(serializers.HyperlinkedModelSerializer):
     category_id = CategorySerializer()
     class Meta:
         model = Invoice
-        fields =   ['invoice_transaction_id','shop_id','brand_id','category_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_bottles','invoice_total']
+        fields =   ['invoice_transaction_id','shop_id','brand_id', 'invoice_date','category_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_cases','invoice_total']
 
 class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
     invoice_transaction_id = serializers.ReadOnlyField()
@@ -113,7 +113,7 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
     category_id = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Category.objects.all())
     class Meta:
         model = Invoice
-        fields =   ['invoice_transaction_id','shop_id','brand_id','category_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_bottles','invoice_total']
+        fields =   ['invoice_transaction_id','shop_id','brand_id', 'invoice_date','category_id','invoice_brand_size','invoice_brand_qty','invoice_rate_per_case','invoice_no_of_cases','invoice_total']
 
 
 class ReadStockOpenSerializer(serializers.HyperlinkedModelSerializer):

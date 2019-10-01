@@ -135,15 +135,15 @@
                                     rows="3" >
                                 </div>
                                 <div class="col">
-                                    <label for="invoice_no_of_bottles">No.of Bottles</label>
+                                    <label for="invoice_no_of_cases">No.of cases</label>
                                     <input
                                     type="text"
-                                    id="invoice_no_of_bottles"
+                                    id="invoice_no_of_cases"
                                     class="form-control"
-                                    placeholder="No.of Bottles"
-                                    name="newInvoice.invoice_no_of_bottles"
+                                    placeholder="No.of case"
+                                    name="newInvoice.invoice_no_of_cases"
 
-                                    v-model="newInvoice.invoice_no_of_bottles"
+                                    v-model="newInvoice.invoice_no_of_cases"
                                     required="required"
                                     rows="3">
                                 </div>
@@ -172,6 +172,32 @@
                         Add
                     </button>
                     <br><hr>
+
+                    <table class="table">
+                      <thead>
+                          <tr>
+                            <th scope="col">Invoice ID</th>  <th scope="col">Brand ID</th>   <th scope="col">Date</th> <th scope="col">Brand Size</th>    <th scope="col">Brand Qty</th>    
+                            <th scope="col">Rate</th>  <th scope="col"># of Bottle </th>   <th scope="col">Total</th>  <th scope="col">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>                                  
+                        <tr v-for="invoice in invoices">
+                            <th scope="row">${invoice.invoice_transaction_id}</th>
+                            <td>${invoice.brand_id}</td>
+                            <td>${invoice.invoice_date}</td>
+                            <td>${invoice.invoice_brand_size}</td>
+                            <td>${invoice.invoice_brand_qty}</td>
+                            <td>${invoice.invoice_rate_per_case}</td>
+                            <td>${invoice.invoice_no_of_case}</td>
+                            <td>${invoice.invoice_total}</td>
+  
+                            <td>
+                              <button class="btn btn-info" v-on:click="getInvoice(invoice.invoice_transaction_id)">Edit</button>
+                              <button class="btn btn-danger" v-on:click="deleteInvoice(invoice.invoice_transaction_id)">Delete</button>
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
                 
               </div>
               <div class="loading" v-if="loading===true">Loading&#8230;</div>                    
@@ -245,7 +271,7 @@
 
                                       </div>
                                       <div class="col">
-                                          <input type="text" 
+                                          <input type="hidden" 
                                           class="form-control" 
                                           v-model="newShift.stock_shift_p"
                                           name="newShift.stock_shift_p"
@@ -265,7 +291,7 @@
                                       <div class="col"><label for="stock_shift_q">Q:</label></div>
                                         <div class="col">
                                             
-                                            <input type="text" 
+                                            <input type="hidden" 
                                             class="form-control"
                                             v-model="newShift.stock_shift_q"
                                             name="newShift.stock_shift_q"
@@ -523,7 +549,7 @@
                                                     <tr>
                                                       <th scope="row"> P  - ${ brandsSize.P  }</th>
                                                       <td>${ op_stk_data.open_p }</td>
-                                                      <td></td>
+                                                      <td>${ in_stk_data }</td>
                                                         <td>${ shift_given.stock_shift_p }</td>
                                                         <td>${ shift_taken.stock_shift_p} </td>
 
@@ -620,7 +646,7 @@
             "invoice_brand_size": null,
             "invoice_brand_qty": null,
             "invoice_rate_per_case": null,
-            "invoice_no_of_bottles": null,
+            "invoice_no_of_cases": null,
             "invoice_total": 0
 
         },
@@ -652,18 +678,20 @@
             });
         },
         getInvoices: function() {
+          var local = new Date();
+            dt = local.toJSON().slice(0,10);
+
           let api_url = '/api/invoice/';
-        //   api_url = `/api/invoice/?search={{shop.shop_id}}`;
-          console.log(api_url);
-        //   if(this.search_term!==''||this.search_term!==null) {
-        //     api_url = `/api/invoice/?search=${this.search_term}`;
-        //   }
+          api_url = `/api/invoice/?format=json&invoice_date=${dt}`
+                  console.log(api_url);
+    
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {
                 this.invoices = response.data;
+                
                 this.loading = false;
-               
+    
               })
               .catch((err) => {
                 this.loading = false;
@@ -695,8 +723,8 @@
                     let qty_data= response.data;
                     let qty_btl = qty_data.find(u => u.quantity_name === this.newInvoice.invoice_brand_size);
                     this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles;
-                    this.newInvoice.invoice_no_of_bottles = this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles;
-                    this.newInvoice.invoice_total = this.newInvoice.invoice_no_of_bottles * this.newInvoice.invoice_rate_per_case;
+                    this.newInvoice.invoice_no_of_cases = this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles;
+                    this.newInvoice.invoice_total = this.newInvoice.invoice_no_of_cases * this.newInvoice.invoice_rate_per_case;
                   
                 })
                 .catch((err) => {
@@ -816,7 +844,11 @@
               })
         },
         addInvoice: function() {
+            var local = new Date();
+            dt = local.toJSON().slice(0,10);
             this.newInvoice['shop_id'] = {{shop.shop_id}} ;
+
+            this.newInvoice['invoice_date'] = dt;
             this.loading = true;
           
           this.$http.post(`/api/invoice/`,this.newInvoice)
@@ -975,6 +1007,8 @@ var myStockShift =  new Vue({
         brandsSize:[],
         categories:[],
         op_stk_data:[],
+        in_stk_data:[],
+        invoices:[],
         loading: true,
         rate: 00,
         currentInvoice: {},
@@ -1025,6 +1059,7 @@ var myStockShift =  new Vue({
               .then((response) => {
                 this.brands = response.data;
                 this.loading = false;
+                this.getInvoicesd();
               
               })
               .catch((err) => {
@@ -1122,6 +1157,7 @@ var myStockShift =  new Vue({
                 this.op_stk_data = response.data;
                 let op_stk_filt = this.op_stk_data.find(u => (new Date (Date.parse(u.open_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.open_shop_id === {{shop.shop_id}});
                 
+
                 this.op_stk_data = op_stk_filt;
                 this.loading = false;
               })
@@ -1132,6 +1168,45 @@ var myStockShift =  new Vue({
 
 
         }, 
+        getInvoicesd: function() {
+          var local = new Date();
+            dt = local.toJSON().slice(0,10);
+
+          let api_url = '/api/invoice/';
+          api_url = `/api/invoice/?invoice_date=${dt}&brand_id=${this.newClosing.brand_id}`
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.in_stk_data = response.data;
+                console.log(this.in_stk_data);
+               // this.invoices = JSON.parse(this.invoices);
+                this.loading = false;
+    
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+        },
+        // getInvoiceData: function(){
+        //   let api_url = '/api/open/';
+        //   api_url = `/api/invoice/?search=${this.newClosing.brand_id}`;
+        //   this.loading = true;
+        //   this.$http.get(api_url)
+        //       .then((response) => {
+        //         this.op_stk_data = response.data;
+        //         let op_stk_filt = this.op_stk_data.find(u => (new Date (Date.parse(u.open_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.open_shop_id === {{shop.shop_id}});
+                
+        //         this.op_stk_data = op_stk_filt;
+        //         this.loading = false;
+        //       })
+        //       .catch((err) => {
+        //         this.loading = false;
+        //         console.log(err);
+        //       })
+
+
+        // },
         getShiftData: function (){
          
           let api_url = '/api/shift/';
@@ -1160,7 +1235,9 @@ var myStockShift =  new Vue({
                     console.log(sft_tkn);
                     this.shift_taken = sft_tkn;
                     this.getOpenData();
-          
+                   
+                 //   getInvoices
+        
                     //console.log(this.shifts);
                     
                     console.log("slectdt: " +this.newClosing.close_date );

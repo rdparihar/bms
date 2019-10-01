@@ -16,6 +16,8 @@ from .serializers import StockOpenSerializer , ReadStockOpenSerializer
 from .models import StockClose
 from .serializers import StockCloseSerializer , ReadStockCloseSerializer
 from rest_framework.permissions import AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 
 
@@ -122,15 +124,34 @@ class InvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     queryset = Invoice.objects.all()
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return ReadInvoiceSerializer
+            return InvoiceSerializer
         elif self.request.method == 'POST':
             return InvoiceSerializer
         else:
             return ReadInvoiceSerializer
     serializer_class = InvoiceSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('category_id')
+    # search_fields = ['brand_id__brand_id']
+ 
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['brand_id__brand_id', 'invoice_date']
 
+# class TodayInvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
+#     login_url = settings.LOGIN_REDIRECT_URL
+#     queryset = Invoice.objects.all()
+#     def get_serializer_class(self):
+#         if self.request.method == 'GET':
+#             return InvoiceSerializer
+#         elif self.request.method == 'POST':
+#             return InvoiceSerializer
+#         else:
+#             return ReadInvoiceSerializer
+#     serializer_class = InvoiceSerializer
+#     filter_backends = (filters.SearchFilter,)
+#     # search_fields = ['brand_id__brand_id']
+ 
+#     filter_backends = [DjangoFilterBackend]
+#     filterset_fields = ['brand_id__brand_id', 'invoice_date']
 
 class StockOpenViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
