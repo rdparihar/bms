@@ -134,7 +134,7 @@ class InvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     # search_fields = ['brand_id__brand_id']
  
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['brand_id__brand_id', 'invoice_date']
+    filterset_fields = ['brand_id', 'invoice_date']
 
 # class TodayInvoiceViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
 #     login_url = settings.LOGIN_REDIRECT_URL
