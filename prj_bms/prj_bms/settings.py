@@ -25,7 +25,7 @@ SECRET_KEY = 'zwm(tgy8x7i&4ks^z-8y^$rccjq-*j&q%u8xif(*-a-(l@)1$g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
