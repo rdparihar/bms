@@ -457,15 +457,9 @@
                                         </select>
                                     </div>
 
-                                    <button onclick="clearInp()"></button>
+                                    
 
-                                    <!-- <ul id="v-for-object" class="col"><h1> ${shift_given.stock_shift_q} </h1>
-                                        <li v-for="(name, value) in shift_given">
-                                             ${name} - ${ value }
-                                             <h1> ${shift_given.stock_shift_p} </h1>
- -->
-
-                                          
+                            
 
 
                                         </li>
@@ -487,75 +481,7 @@
                                     
                                       </div>
 
-                                      <!-- <table class="table ">
-                                          <tr>
-                                          <td>
-                                              <table>
-                                                  <thead>
-                                                      <tr>
-                                                          <th scope="col">#</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                      
-                                                      <tr v-for="size in brandsSize">
-                                                          <td>${size.quantity_name}</td>
-                                                      </tr>
-                                                      
-                                                  </tbody>
-                                              </table>
-                                          </td>
-                                          <td>
-                                              <table>
-                                                  <thead>
-                                                      <tr>
-                                                          <th scope="col">Taken</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                      <tr v-for="(value, name) in shift_taken">
-                                                          <td>${ name } -  ${ value }</td>
-                                                          
-                                                      </tr>
-                                                     
-                                                  </tbody>
-                                              </table>
-                                          </td>
-
-                                          <td>
-                                              <table>
-                                                  <thead>
-                                                      <tr>
-                                                          <th scope="col">Given</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                      <tr v-for="(value, name) in shifts">
-                                                          <td>${ name } -  ${ value }</td>
-                                                          
-                                                      </tr>
-                                                     
-                                                  </tbody>
-                                              </table>
-                                          </td>
-
-                                          <td>
-                                              <table>
-                                                  <thead>
-                                                      <tr>
-                                                          <th scope="col">Given</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                      <tr v-for="(value, name) in shift_given">
-                                                          <td>${ name } -  ${ value }</td>
-                                                          
-                                                      </tr>
-                                                     
-                                                  </tbody>
-                                              </table>
-                                          </td>
-                                          </tr></table> -->
+                                 
 
                                  
 
@@ -575,17 +501,7 @@
                                                 </thead>
                                                 <tbody>
 
-                                                    <!-- <tr v-for="(item, index) in x">
-                                                        <td><input v-model.number="item" size="10">${item}</td>
-                                                        <td>${ shift_given.stock_shift_p }</td>
-                                                        <td>${ shift_given.stock_shift_p }</td>
-                                                        <td>${ shift_taken.stock_shift_p} </td>
-
-                                                        <!-- <td><input v-model.number="item.price" size="10"></td>
-                                                        <td><input v-model.number="subtotalRow[index]" readonly size="10"></td>
-                                                        <td><button @click="addRow(index)">+</button></td>
-                                                        <td><button @click="removeRow(index)">-</button></td> 
-                                                     </tr>   -->
+                                                   
                                                     
 
 
@@ -596,9 +512,16 @@
                                                         <td>${ shift_given.stock_shift_p } </td>
                                                         <td>${ shift_taken.stock_shift_p} </td>
 
-                                                        <td></td>
+                                                        <td><input
+                                                          type="number"
+                                                          name="newClosing.close_qty_p"
+                                                          class="form-control"
+                                                          id="close_qty_p"
+                                                          placeholder="Enter Closing Qty"
+                                                          v-model="newClosing.close_qty_p"
+                                                          ></td>
                                                         <td> ${ sold_p}</td>
-                                                        <td> ${ total_p}</td>
+                                                        <td> ${ total_p} - ${ brnd_details.brand_p_sale }</td>
                                                       </tr>
                                                       <tr> 
                                                          <th scope="row"> Q  - ${ brandsSize.Q  }</th>
@@ -803,6 +726,7 @@
                 this.brands = response.data;
                 
                 let shop_data= response.data;
+                this.serverError= false;
                 console.log(shop_data)
                 //let obj = shop_data.find(u => u.brand_id === this.newInvoice.brand_id);
                 this.newInvoice.invoice_rate_per_case = shop_data.brand_q_cost;
@@ -1044,6 +968,7 @@ var myStockShift =  new Vue({
         categories:[],
         op_stk_data:{"open_p": 0},
         in_stk_data:{"P": 0, "Q": 0, "N": 0, "L": 0, "Y": 0, "XG": 0 , },
+        brnd_details: { "brand_p_sale": 0, "brand_q_sale": 0, "brand_n_sale": 0, "brand_d_sale": 0, "brand_l_sale": 0, "brand_xg_sale": 0, "brand_y_sale": 0 },
         invoices:[],
         loading: true,
         rate: 00,
@@ -1073,10 +998,10 @@ var myStockShift =  new Vue({
       },
       computed: {
         sold_p() {
-      	return (parseInt(this.op_stk_data.open_p) + parseInt(this.in_stk_data.P)  + parseInt(this.shift_taken.stock_shift_p) - parseInt(this.shift_given.stock_shift_p)) || 0;
+      	return (parseInt(this.op_stk_data.open_p) + parseInt(this.in_stk_data.P)  + parseInt(this.shift_taken.stock_shift_p) - parseInt(this.shift_given.stock_shift_p) - parseInt(this.newClosing.close_qty_p)) || 0;
       },
       total_p() {
-      	return (parseInt(this.sold_p) * parseInt(this.in_stk_data.P)) || 0;
+      	return (parseInt(this.sold_p) * parseInt(this.brnd_details.brand_p_sale)) || 0;
       },
       
     },
@@ -1121,6 +1046,7 @@ var myStockShift =  new Vue({
                   console.log(err);
                 })
             },
+        
         addClosing: function() {
           this.newClosing['close_shop_id'] = {{shop.shop_id}} ;
           this.loading = true;
@@ -1135,9 +1061,11 @@ var myStockShift =  new Vue({
           })
         },
         addOpening: function() {
+          var date = new Date(this.newClosing.close_date);
+          date.setDate(date.getDate() + 1);
+          this.newOpening['open_date'] = date.toJSON().slice(0,10);
           this.newOpening['brand_id'] = this.newClosing['brand_id']  ;
           this.newOpening['open_shop_id'] =  this.newClosing['close_shop_id']  ;
-          this.newOpening['open_date'] =  this.newClosing['close_date']  ;
           this.newOpening['open_p'] =  this.newClosing['close_qty_p']  ;
           this.newOpening['open_q'] =  this.newClosing['close_qty_q']  ;
           this.newOpening['open_n'] =  this.newClosing['close_qty_n']  ;
@@ -1185,16 +1113,23 @@ var myStockShift =  new Vue({
         getOpenData: function(){
           let api_url = '/api/open/';
           api_url = `/api/open/?search=${this.newClosing.brand_id}`;
+          let shop_id = {{shop.shop_id}} ;
+          let api_urlx = `/api/open/?open_shop_id=${shop_id}&open_date=${this.newClosing.close_date}&brand_id=${this.newClosing.brand_id}`
           this.loading = true;
-          this.$http.get(api_url)
+          this.$http.get(api_urlx)
               .then((response) => {
-                this.op_stk_data = response.data;
-                let op_stk_filt = this.op_stk_data.find(u => (new Date (Date.parse(u.open_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.open_shop_id === {{shop.shop_id}}) ||0 ;
                 
-                if (op_stk_filt)
-                {
-                  this.op_stk_data = op_stk_filt;
+                let op_data = response.data;
+                console.log(op_data); 
+                console.log(api_urlx);
+                if (op_data.length > 0){
+                  this.op_stk_data = op_data[0];
                 }
+                else{
+                  this.op_stk_data = this.op_stk_data;
+                }
+                
+                // let op_stk_filt = this.op_stk_data.find(u => (new Date (Date.parse(u.open_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.open_shop_id === {{shop.shop_id}}) ||0 ;
                 
                 this.loading = false;
               })
@@ -1208,6 +1143,8 @@ var myStockShift =  new Vue({
         getInvoicesd: function() {
           var local = new Date();
             dt = local.toJSON().slice(0,10);
+            console.log(dt)
+
           // let api_url = '/api/invoice/';
           let api_url = `/api/invoice/?invoice_date=${this.newClosing.close_date}&brand_id=${this.newClosing.brand_id}`
           this.loading = true;
@@ -1302,6 +1239,7 @@ var myStockShift =  new Vue({
                     
                     this.getOpenData();
                     this.getInvoicesd();
+                    this.getBrandDetail();
                    
                  //   getInvoices
         
@@ -1316,6 +1254,34 @@ var myStockShift =  new Vue({
                 console.log(err);
               })
         },
+        getBrandDetail: function(){
+          let api_url = '/api/open/';
+          api_url = `/api/brand-detail/?brand_id=${this.newClosing.brand_id}`
+          this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                let brnd_data = response.data;
+                
+                console.log(brnd_data);
+                if (brnd_data.length > 0){
+                  this.brnd_details = brnd_data[0];
+                }
+                // else{
+                //   // this.op_stk_data = this.op_stk_data;
+                // }
+                
+                // let op_stk_filt = this.op_stk_data.find(u => (new Date (Date.parse(u.open_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.open_shop_id === {{shop.shop_id}}) ||0 ;
+                
+                this.loading = false;
+              })
+              .catch((err) => {
+                this.loading = false;
+                console.log(err);
+              })
+
+
+        }, 
+
         }
         });
        

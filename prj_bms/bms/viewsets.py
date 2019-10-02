@@ -14,7 +14,7 @@ from django.conf import settings
 from .models import StockOpen
 from .serializers import StockOpenSerializer , ReadStockOpenSerializer
 from .models import StockClose
-from .serializers import StockCloseSerializer , ReadStockCloseSerializer
+from .serializers import StockCloseSerializer , ReadStockCloseSerializer, BrandDetailSerializer
 from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -49,6 +49,17 @@ class BrandViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     serializer_class = BrandSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ['category_id__category_id','brand_name',]
+
+
+class BrandDetailViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
+    login_url = settings.LOGIN_REDIRECT_URL
+    queryset = Brand.objects.all()
+    
+        
+    serializer_class = BrandDetailSerializer
+     
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['brand_id', 'category_id', 'brand_name']
 
 class UserViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
@@ -164,8 +175,10 @@ class StockOpenViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
         else:
             return ReadStockOpenSerializer
     serializer_class = StockOpenSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('brand_id__brand_id','open_date')
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ('brand_id__brand_id','open_date')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['brand_id', 'open_date', 'open_shop_id']
 
 
 

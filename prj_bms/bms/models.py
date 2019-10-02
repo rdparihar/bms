@@ -147,10 +147,10 @@ class StockOpen(models.Model):
     class Meta:
         verbose_name = 'StockOpen'
         verbose_name_plural = 'StockOpens'
-        ordering = ["open_date"]
+        ordering = ["open_date" ]
 
     def __str__(self):
-         return str(self.open_date)
+         return str(self.brand_id)
 
 
 class StockClose(models.Model):

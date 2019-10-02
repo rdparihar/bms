@@ -29,6 +29,16 @@ class BrandSerializer(serializers.ModelSerializer):
             model = Brand
             fields =  ['brand_id','brand_name','brand_description','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
 
+class BrandDetailSerializer(serializers.ModelSerializer):
+    brand_id = serializers.ReadOnlyField()
+    category_id = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Category.objects.all())
+    class Meta:
+        model = Brand
+        fields =  ['brand_id','brand_name','brand_description','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
+
+
+
+
 class QuantitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Quantity
