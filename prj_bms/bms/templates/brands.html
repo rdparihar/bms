@@ -1,18 +1,19 @@
 <!DOCTYPE html>
+
 {% load static %}
 {% include 'head.html' %}
 
 <body class="bg-light">
     {% include 'topnavbar.html' %}
       
-
+{% if user.is_authenticated %}
           <main role="main" class="container">
               <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
                   <div class="lh-100">
                     <h5 class="mb-0 text-white lh-100">Brands</h5>
                     <small>List of brands</small>
                   </div>
-                </div>
+              </div>
               
                 <div class="my-3 p-3 bg-white rounded shadow-sm">
                   <div id="starting">
@@ -499,9 +500,11 @@
             
                 </div>
           </main>
-                  </div>
-              </div>
-    
+          {% else%}
+          <div class="bg-white card my-3 p-3 rounded shadow container border-0 ">
+              <a href="{% url 'login'%}">Click here to login</a>
+          </div> 
+          {% endif %}            
   <!-- bootrtap js files -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -613,5 +616,8 @@
       }
     });
   </script>
-  </body>
+  
+
+
+</body>
 </html>

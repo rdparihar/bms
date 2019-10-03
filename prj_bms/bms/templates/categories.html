@@ -5,7 +5,7 @@
 <body class="bg-light">
     {% include 'topnavbar.html' %}
       
-
+    {% if user.is_authenticated %}
          
           <main role="main" class="container">
               <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
@@ -170,6 +170,12 @@
               </div>
               </div>
           </main>
+    
+          {% else%}
+          <div class="bg-white card my-3 p-3 rounded shadow container border-0 ">
+              <a href="{% url 'login'%}">Click here to login</a>
+          </div> 
+          {% endif %}
     
 
   <!-- bootrtap js files -->

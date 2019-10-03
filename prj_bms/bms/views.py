@@ -51,7 +51,7 @@ def sig_user_logged_in(sender, user, request, **kwargs):
 
 
 
-class ShopListView(generic.ListView):
+class ShopListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'shop_list'
     model = Shop
     queryset = Shop.objects.all()
@@ -71,7 +71,7 @@ class ShopListView(generic.ListView):
         return context
  
      
-class ShopDetailView( generic.DetailView):
+class ShopDetailView(LoginRequiredMixin, generic.DetailView):
     model = Shop
     template_name = "shop_details.html"
     
@@ -103,7 +103,7 @@ class AdminView(LoginRequiredMixin, generic.ListView):
         context['bms_suadmin'] = BmsUser.objects.filter(user_role="S")
         return context
 
-class AdminDetailsView(generic.DetailView):
+class AdminDetailsView(LoginRequiredMixin, generic.DetailView):
     def get(self, request, *args, **kwargs):
         list = Shop.objects.filter(shop_admin=kwargs['pk'])
         user= get_object_or_404(BmsUser, pk=kwargs['pk'])
