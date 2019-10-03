@@ -7,7 +7,7 @@
       
 
           <main role="main" class="container">
-              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-orange rounded shadow-sm">
                   <div class="lh-100">
                     <h5 class="mb-0 text-white lh-100">Sub-Admin</h5>
                     <small>List of Sub-Admins</small>
@@ -146,25 +146,22 @@
           </div>
           <div class="row">
               {% if bms_suadmin %}
-              <table class="table">
+              <table class="table table-hover">
                   <thead>
                     <tr>
-                      <th scope="col">User id</th>
+                      <td scope="col">&nbsp;</td>
+                      <th scope="col">Name</th>
                       <th scope="col">Username</th>
-                      <th scope="col"> First</th>
-                      <th scope="col"> Last Name</th>
-                      <th scope="col"> Role</th>
     
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
-                  <tbody>{% for sbadmin in bms_suadmin %}
+                  <tbody>
+                    {% for sbadmin in bms_suadmin %}
                     <tr>
-                      <th scope="row">{{sbadmin.user_id}}</th>
-                      <td><a href="{{sbadmin.user_id }}">{{sbadmin.username}}</a> </td>
-                      <td>{{sbadmin.user_first_name}} </td>
-                      <td>{{sbadmin.user_last_name}}</td>
-                      <td>{{sbadmin.user_role}}</td>
+                      <td class="link-row" data-href="{{sbadmin.user_id }}">&nbsp;</td>
+                      <td class="link-row" data-href="{{sbadmin.user_id }}">{{sbadmin.user_first_name}} {{sbadmin.user_last_name}} </td>
+                      <td class="link-row" data-href="{{sbadmin.user_id }}">{{sbadmin.username}}</a> </td>
                       <td>
                          
                         <button class="btn btn-outline-primary" v-on:click="getBmsUser({{sbadmin.user_id}})">Edit</button>
@@ -352,6 +349,14 @@
 <script src="{% static 'js/vendor/feather.min.js' %}"></script>
 <script>
 feather.replace()
+</script>
+
+<script>
+jQuery(document).ready(function($){
+  $(".link-row").click(function(){
+    window.location = $(this).data("href");
+  })
+})
 </script>
 <!-- vue.js files -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>

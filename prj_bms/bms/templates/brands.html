@@ -22,7 +22,7 @@
                       <div class="row pt-2 mt-0 pb-2 mb-0">
                           <div class="col">
                           <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBrandModal">
-                                  New Brand</button></h2>
+                              <i class="fas fa-plus"></i>   New Brand</button></h2>
                           </div>
                           <div class="col">
                             <div class="row form-inline ">
@@ -36,15 +36,17 @@
                           
 
                       <div class="table-responsive">
-                          <table class="table table-bordered table-hover">
+                          <table class="table  table-hover">
                             <thead>
                               <tr>
-                                <th scope="col">#</th>
+                                <th></th>
                                 <th scope="col">name</th>
                                 
                                 <th scope="col">description</th>
                                 <th scope="col">Category </th>
-                                <th scope="col">p_cost</th>
+                                <th scope="col">Code </th>
+
+                                <!-- <th scope="col">p_cost</th>
                                 <th scope="col">q_cost</th>
                                 <th scope="col">n_cost</th>
                                 <th scope="col">d_cost</th>
@@ -57,18 +59,19 @@
                                 <th scope="col">l_sale</th>
                                 <th scope="col">d sale</th>
                                 <th scope="col">xg_sale</th>
-                                <th scope="col">y_sale</th>
+                                <th scope="col">y_sale</th> -->
                                 <th scope="col" colspan="3">Action</th>
                 
                               </tr>
                             </thead>
                             <tbody>
                               <tr v-for="brand in brands">
-                                <th scope="row">${brand.brand_id}</th>
+                                <th scope="row"></th>
                                 <td>${brand.brand_name}</td>
                                 <td>${brand.brand_description}</td>
                                 <td>${brand.category_id.category_name}</td>
-                                <td>${brand.brand_p_cost}</td>
+                                <td></td>
+                                <!-- <td>${brand.brand_p_cost}</td>
                                 <td>${brand.brand_q_cost}</td>
                                 <td>${brand.brand_n_cost}</td>
                                 <td>${brand.brand_d_cost}</td>
@@ -81,12 +84,12 @@
                                 <td>${brand.brand_d_sale}</td>
                                 <td>${brand.brand_l_sale}</td>
                                 <td>${brand.brand_xg_sale}</td>
-                                <td>${brand.brand_y_sale}</td>
+                                <td>${brand.brand_y_sale}</td> -->
                                 <td>
-                                  <button class="btn btn-info" v-on:click="getBrand(brand.brand_id)">Edit</button>
+                                  <button class="btn btn-outline-primary" v-on:click="getBrand(brand.brand_id)">Edit</button>
                                 </td>
                                 <td>
-                                  <button class="btn btn-danger" v-on:click="deleteBrand(brand.brand_id)">Delete</button>
+                                  <button class="btn btn-outline-danger" v-on:click="deleteBrand(brand.brand_id)">Delete</button>
                                 </td>
                               </tr>
                             </tbody>
@@ -98,7 +101,7 @@
                     
                       <!-- Add Brand Modal -->
                       <div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">Create a Brand</h5>
@@ -292,7 +295,7 @@
                       <!-- End of add brand modal -->
                       <!-- Edit Brand Modal -->
                       <div class="modal fade" id="editBrandModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog modal-lg" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
                               <h5 class="modal-title" id="exampleModalLongTitle">EDIT Brand</h5>
