@@ -1,40 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>BMS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% load static %}
+{% include 'head.html' %}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<body class="bg-light">
+    {% include 'topnavbar.html' %}
+      
 
-  {% load static %}
-    
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+          <main role="main" class="container">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+                  <div class="lh-100">
+                    <h5 class="mb-0 text-white lh-100">Brands</h5>
+                    <small>List of brands</small>
+                  </div>
+                </div>
+              
+                <div class="my-3 p-3 bg-white rounded shadow-sm">
+                  <div id="starting">
 
-  </head>
 
-  <body>
-      {% include 'topnavbar.html' %}
-      <div class="container-fluid">
-
-          {% include 'sidenavbar.html' %}
-
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            
-
-                
-          
-              <div id="starting">
-                                  
-                  <div class="container">
-                      <h2>List of Brands <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBrandModal">
-                          ADD Brand</button></h2> <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
-                              <input class="form-control mr-sm-2" type="text" placeholder="Search by Brand Name / cat id" v-model="search_term" aria-label="Search">
+                      <div class="row pt-2 mt-0 pb-2 mb-0">
+                          <div class="col">
+                          <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBrandModal">
+                                  New Brand</button></h2>
+                          </div>
+                          <div class="col">
+                            <div class="row form-inline ">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Search by Brand Name / cat id" v-model="search_term" aria-label="Search">
                               <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getBrands()">Search</button>
                             
-                            <br/>
+                            </div>
+                             
                           </div>
+                        </div>
+                          
 
                       <div class="table-responsive">
                           <table class="table table-bordered table-hover">
@@ -92,8 +90,8 @@
                               </tr>
                             </tbody>
                           </table>
-                          </div>
-                    </div>
+                      </div>
+                   
                       
                       
                     

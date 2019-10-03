@@ -1,63 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>BMS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% load static %}
+{% include 'head.html' %}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<body class="bg-light">
+    {% include 'topnavbar.html' %}
+      
 
-  {% load static %}
-    
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-  </head>
-
-  <body>
-      {% include 'topnavbar.html' %}
-      <div class="container-fluid">
-        <div class="row">
-
-          {% include 'sidenavbar.html' %}
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-              <div id="starting">
-                  <div class="container">
-                  
-                    <div class="row">
-                      <h1>List of Categories
-                      <button  type="button" class="btn btn-success" data-toggle="modal" data-target="#addCategoryModal">New Category</button>
-                      </h1>
-                      &emsp;
-                      <div class="form-inline my-2 my-lg-0" style="margin-left: 50%;">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCategories()">Search</button>
+         
+          <main role="main" class="container">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+                  <div class="lh-100">
+                    <h5 class="mb-0 text-white lh-100">Category</h5>
+                    <small>List of Categories</small>
+                  </div>
+                </div>
+              
+                <div class="my-3 p-3 bg-white rounded shadow-sm">
+                  <div id="starting">
+                    <div class="row border-bottom border-gray pt-2 mt-0 pb-2 mb-0">
+                      <div class="col">
+                        <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">New Category</button>
                       </div>
-                      <table class="table">
+                      <div class="col">
+                        <div class="row form-inline ">
+                            <input class="form-control " type="text" placeholder="Search" v-model="search_term" aria-label="Search">
+                            <button class="btn btn-outline-success ml-2" v-on:click.prevent="getCategories()">Search</button>
+         
+                        </div>
+                         
+                      </div>
+                    </div>
+                  
+                  
+                    <div class="row py-0 px-2  my-2">
+                    
+                      <table class="table table-hover ">
                         <thead>
                           <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Heading</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Description </th>
+
+                            <th scope="col" class="text-center">Action</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr v-for="category in categorys">
                             <th scope="row">${category.category_id}</th>
                             <td>${category.category_name}</td>
-                            <td>
-                              <button class="btn btn-info" v-on:click="getCategory(category.category_id)">Edit</button>
-                              {% if perms.category.can_delete_category %}
-                              <button class="btn btn-danger" v-on:click="deleteCategory(category.category_id)">Delete</button>
-                                  {% endif %}
+                            <td>${category.category_description}</td>
+                            <td class="text-center">
+                              <button class="btn btn-outline-primary " v-on:click="getCategory(category.category_id)">Edit</button>
+                 
+                              <button class="btn btn-outline-danger" v-on:click="deleteCategory(category.category_id)" {% if perms.category.can_delete_category %}disabled {% else %}  {% endif %}>Delete</button>
+                                  
                             </td>
                           </tr>
                         </tbody>
                       </table>
             
                       <!-- Add Category Modal -->
-                      <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
+                      <div class="modal fade " id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
                               <h5 class="modal-title" id="exampleModalLongTitle">Create New Category</h5>
@@ -102,10 +106,10 @@
               
                       <!-- Edit Category Modal -->
                       <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLongTitle">EDIT Category</h5>
+                              <h5 class="modal-title" id="exampleModalLongTitle">Edit Cateogy</h5>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
@@ -113,24 +117,24 @@
                             <form v-on:submit.prevent="updateCategory()">
                             <div class="modal-body">
                                 <div class="form-group">
-                                  <label for="category_name">Category Heading</label>
+                                  <label for="category_name">Category Name</label>
                                   <input
                                     type="text"
                                     class="form-control"
                                     id="category_name"
-                                    placeholder="Enter Category Heading"
+                                    placeholder="Enter New Name"
                                     v-model="currentCategory.category_name"
                                     required="required" >
                                 </div>
                                 <div class="form-group">
-                                  <label for="category_description">Category Body</label>
-                                  <textarea
+                                  <label for="category_description">Category Description</label>
+                                  <input
                                     class="form-control"
                                     id="category_description"
-                                    placeholder="Enter Category Body"
+                                    placeholder="Enter Category Description"
                                     v-model="currentCategory.category_description"
                                     required="required"
-                                    rows="3"></textarea>
+                                   >
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -143,7 +147,7 @@
                         <div class="loading" v-if="loading===true">Loading&#8230;</div>
                       </div>
                       <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">Deleted </h5>
@@ -160,10 +164,11 @@
                       <!-- End of edit category modal -->
             
                     </div>
-                  </div>
+                  
                   <div class="loading" v-if="loading===true">Loading&#8230;</div>
             
-                </div>
+              </div>
+              </div>
           </main>
     
 

@@ -21,6 +21,8 @@ import datetime
 def sig_user_logged_in(sender, user, request, **kwargs):
     request.session['isLoggedIn'] = True
     request.session['isAdmin'] = True
+    request.session['isUser'] = True
+    request.session['isSubAdmin'] = True
     request.session['email'] = user.email
     request.session['username'] = user.username
     username  = request.session.get('username')
@@ -31,6 +33,9 @@ def sig_user_logged_in(sender, user, request, **kwargs):
     
     isLoggedIn = request.session.get('isLoggedIn',False)
     isAdmin = request.session.get('isAdmin',False)
+    isUser = request.session.get('isUser',False)
+    isSubAdmin = request.session.get('isSubAdmin',False)
+
     email = request.session.get('email','')
     emp_id = request.session.get('emp_id')
     request.session.save()
@@ -38,7 +43,7 @@ def sig_user_logged_in(sender, user, request, **kwargs):
     return render(
         request,
         'registration/login.html',
-        context = {'isLoggedIn':isLoggedIn,'isAdmin':isAdmin,'email':email, 'emp_id':emp_id},
+        context = {'isLoggedIn':isLoggedIn,'isAdmin':isAdmin,'isUser':isUser, 'isSubAdmin':isSubAdmin, 'email':email, 'emp_id':emp_id},
     )
 
 
@@ -55,7 +60,10 @@ class ShopListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         isAdmin = self.request.session['isAdminUser']
-        context = { "isAdmin" : isAdmin}
+        isUser = self.request.session['isUser']
+        isSubAdmin = self.request.session['isSubAdmin']
+
+        context = { "isAdmin" : isAdmin, 'isUser':isUser, 'isSubAdmin':isSubAdmin}
         userid = self.request.user.id
         context['user'] = self.request.user
         context['bms_users'] = BmsUser.objects.all()
@@ -113,13 +121,18 @@ class AdminDetailsView(generic.DetailView):
     #     return render(request, context={'sub': sub, 'shop_list':shop_list, })
 
 
+@login_required(login_url='/accounts/login/')
 def HomeView(request, id=None):
     # user = get_object_or_404(User, id=id) 
     # user = get_object_or_404(User) 
     request.session['userid'] = request.user.id
     id = request.session.get('userid')
     isAdminUser = False  # create the user seesion for admin true
+    isUser = False
+    isSubAdmin = False
     request.session['isAdminUser'] = isAdminUser
+    request.session['isUser'] = isUser
+    request.session['isSubAdmin'] = isSubAdmin
     print(id)
     try:
         bms_role=BmsUser.objects.filter(username = id).values('user_role')[0]['user_role']
@@ -140,10 +153,16 @@ def HomeView(request, id=None):
         if bms_role =='S':
             print ("you are subadmin ")
             request.session['isBmsUser'] = True
+            request.session['isSubAdmin'] = True
             return HttpResponseRedirect("/shop/")
         else:
             request.session['isBmsUser'] = True
+            request.session['isUser'] = True
+
             print("You are shopkeeper")
+            return HttpResponseRedirect("/shop/")
+
+        
 
 
 

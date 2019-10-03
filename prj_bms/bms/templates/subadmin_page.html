@@ -1,25 +1,23 @@
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>BMS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% load static %}
+{% include 'head.html' %}
 
-  {% load static %}
-    
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<body class="bg-light">
+    {% include 'topnavbar.html' %}
+      
 
-  </head>
+          <main role="main" class="container">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+                  <div class="lh-100">
+                    <h5 class="mb-0 text-white lh-100">Sub-Admin</h5>
+                    <small>List of Sub-Admins</small>
+                  </div>
+                </div>
+              
+                <div class="my-3 p-3 bg-white rounded shadow-sm">
 
-  <body>
-      {% include 'topnavbar.html' %}{% include 'sidenavbar.html' %}
-      <div class="container-fluid">
-        <div class="row">
-        
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          
+           
               <div class="row pt-3 px-4">
                   <div style="width: 100%; background: linear-gradient(to right, #f5efe8, #eef2f5);" >
                       <div class="card-body">
@@ -63,7 +61,7 @@
                         
                       {% else %}
                       <div class="alert alert-info">
-                          <h3> <strong></strong> There are no Shops.</h3>
+                          <h3> There are no Shops. <strong><a href="{% url 'shop' %}" >Click here</a></strong> to create and assign new</h3>  
                       </div>
                       
                       {% endif %}

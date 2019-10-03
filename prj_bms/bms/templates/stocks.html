@@ -1,252 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>BMS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% load static %}
+{% include 'head.html' %}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-  {% load static %}
-    
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-  </head>
-
-  <body>
+<body class="bg-light">
     {% include 'topnavbar.html' %}
       {% if user.is_authenticated %}
       
-      <div class="container-fluid">
-
-        <div class="row">
-
-          {% include 'sidenavbar.html' %}
-
-          
-
-   
-
-  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-      <div id="starting">
-        <ul class="nav nav-pills ">
-          <h3>Shop List</h3>
-
+      
 
        
-
-
-        </ul>
-        <div class="container">
-          <h1>
-            <button  type="button" class="btn btn-success" data-toggle="modal" data-target="#addShopModal">Add a Shop</button>
-          </h1>
-          <div class="row">
-              {% if shop_list %}
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Shop ID</th>
-                    <th scope="col">Shop Name</th>
-                    <th scope="col">Shop Owner</th>
-                    <th scope="col">Shop Address</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                
-                <tbody>
-                  {% for shop in shop_list %}
-                  <tr>
-                    <th scope="row">{{shop.shop_id}}</th>
-                    <td><a href="{{ shop.shop_id }}">{{shop.shop_name}}</a> </td>
-                    <td>{{shop.shop_owner}}</td>
-                    <td>{{shop.shop_address}}</td>
-                    <td>
-                      <button class="btn btn-info" name="newShop.edit" value="{{shop.shop_id}}" v-on:click="getShop({{shop.shop_id}})">Edit</button>
-                    
-                      <button class="btn btn-danger" name="newShop.delete" value="{{shop.shop_id}}" v-on:click="deleteShop({{shop.shop_id}})">Delete</button>
-                      
-
-                    </td>
-                    {% endfor %}
-                  </tr>
-                </tbody>
-                {% else %}
-                {% if isAdmin %}
-                    <div class="alert alert-info">
-                        <h3> <strong>Admin  !</strong> Create a shop or go to Home page . </h3>
-                    </div>
-                   
-                  
-                {% else %}
-                <div class="alert alert-info">
-                    <h3> <strong></strong> There are no Shops.</h3>
-                </div>
-                
-                {% endif %}
-
-                        {% endif %}  
-            </table>
           
-        
-             <!-- Add Shop Modal -->
-             <div class="modal fade" id="addShopModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLongTitle">New Shop</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <form v-on:submit.prevent="addShop()">
-                    <div class="modal-body">
-                        <div class="form-group">
-                          <label for="shop_name">Shop Name</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="shop_name"
-                            placeholder="Enter Shop name"
-                            v-model="newShop.shop_name"
-                            required="required" >
-                        </div>
-                        <div class="form-group">
-                          <label for="shop_owner">Shop Owner</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="shop_owner"
-                            placeholder="Enter Shop Owner"
-                            v-model="newShop.shop_owner"
-                            required="required"
-                            rows="3">
-                        </div>
-                        <div class="form-group">
-                            {% if isAdmin %}
-                            <label for="shop_admin"></label>
-                                <label for="shop_admin">Assign to Subadmins</label>
-                                <select v-model.number="newShop.shop_admin" name="newBmsUser.shop_admin" class="form-control" >
-                                  <option v-for="user in subadmins" value="user.user_id">${user.user_first_name} ${user.user_last_name} - ( ${user.username.username} )</option>   
-                                </select>
-                          
+
+          <main role="main" class="container">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+                <div class="lh-100">
+                  <h6 class="mb-0 text-white lh-100">Shops</h6>
+                  <small>List of Shops for you</small>
+                </div>
+              </div>
+            
+              <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <h6 class="border-bottom border-gray pb-2 mb-0">{% if isAdmin or isSubAdmin %}
+                    
+                      <button  type="button" class="btn btn-success" data-toggle="modal" data-target="#addShopModal">Add a Shop</button>
+                   
+                  {% endif %}</h6>
+                <div id="starting">
+                    <ul class="nav nav-pills ">
+                    
+                    <div class="container">
+                                  
+                      
+                      <div class="row">
+                          {% if shop_list %}
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Shop ID</th>
+                                <th scope="col">Shop Name</th>
+                                <th scope="col">Shop Owner</th>
+                                <th scope="col">Shop Address</th>
+                                <th scope="col">Action</th>
+                              </tr>
+                            </thead>
+                            
+                            <tbody>
+                              {% for shop in shop_list %}
+                              <tr>
+                                <th scope="row">{{shop.shop_id}}</th>
+                                <td><a href="{{ shop.shop_id }}">{{shop.shop_name}}</a> </td>
+                                <td>{{shop.shop_owner}}</td>
+                                <td>{{shop.shop_address}}</td>
+                                <td>
+                                  <button class="btn btn-info" name="newShop.edit" value="{{shop.shop_id}}" v-on:click="getShop({{shop.shop_id}})">Edit</button>
+                                
+                                  <button class="btn btn-danger" name="newShop.delete" value="{{shop.shop_id}}" v-on:click="deleteShop({{shop.shop_id}})">Delete</button>
+                                  
+            
+                                </td>
+                                {% endfor %}
+                              </tr>
+                            </tbody>
                             {% else %}
-                            <input
-                              type="hidden"
-                              class="form-control"
-                              id="shop_admin"
-                              :value="{{user.id}}"
-                              name="newShop.shop_admin"
-                              placeholder="{{user}}"
+                            {% if isAdmin %}
+                                <div class="alert alert-info">
+                                    <h3> <strong>Admin  !</strong> Create a shop or go to Home page . </h3>
+                                </div>
+                               
                               
-                              required="required"
-                              rows="3" >
-                              {% endif %}
-                          </div>
-                        <div class="form-group">
-                          <label for="shop_address">Shop Address</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="shop_address"
-                            placeholder="Enter Shop Address"
-                            v-model="newShop.shop_address"
-                            required="required"
-                            rows="3">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                    </form>
-                  </div>
-                </div>
-                <div class="loading" v-if="loading===true">Loading&#8230;</div>
-              </div>
-              <!-- End of add shop modal -->
-              <!-- Edit Shop Modal -->
-              <div class="modal fade" id="editShopModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLongTitle">EDIT Shop</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <form v-on:submit.prevent="updateShop()">
-                        <div class="modal-body">
+                            {% else %}
+                            <div class="alert alert-info">
+                                <h3> <strong></strong> There are no Shops.</h3>
+                            </div>
+                            
+                            {% endif %}
+            
+                                    {% endif %}  
+                        </table>
+                      
+                    
+                         <!-- Add Shop Modal -->
+                         <div class="modal fade" id="addShopModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">New Shop</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <form v-on:submit.prevent="addShop()">
+                                <div class="modal-body">
                                     <div class="form-group">
-                              <label for="shop_name">Shop Heading</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="shop_name"
-                                placeholder="Enter Shop Heading"
-                                v-model="currentShop.shop_name"
-                                required="required" >
-                            </div>
-                            <div class="form-group">
-                              <label for="shop_owner">Shop Owner</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="shop_owner"
-                                placeholder="Enter Shop Owner"
-                                v-model="currentShop.shop_owner"
-                                required="required"
-                                rows="3">
-                            </div>
-                            <div class="form-group">
-                                <input
-                                  type="hidden"
-                                  class="form-control"
-                                  id="shop_admin"
-                                 id="shop_admin"
-                                  :value="{{user.id}}"
-                                  name="currentShop.shop_admin"
-                                  placeholder="{{user}}"
-                                  required="required"
-                                  rows="3">
+                                      <label for="shop_name">Shop Name</label>
+                                      <input
+                                        type="text"
+                                        class="form-control"
+                                        id="shop_name"
+                                        placeholder="Enter Shop name"
+                                        v-model="newShop.shop_name"
+                                        required="required" >
+                                    </div>
+                                    <div class="form-group">
+                                      <label for="shop_owner">Shop Owner</label>
+                                      <input
+                                        type="text"
+                                        class="form-control"
+                                        id="shop_owner"
+                                        placeholder="Enter Shop Owner"
+                                        v-model="newShop.shop_owner"
+                                        required="required"
+                                        rows="3">
+                                    </div>
+                                    <div class="form-group">
+                                        {% if isAdmin %}
+                                        <label for="shop_admin"></label>
+                                            <label for="shop_admin">Assign to Subadmins</label>
+                                            <select v-model.number="newShop.shop_admin" name="newBmsUser.shop_admin" class="form-control" >
+                                              <option v-for="user in subadmins" value="user.user_id">${user.user_first_name} ${user.user_last_name} - ( ${user.username.username} )</option>   
+                                            </select>
+                                      
+                                        {% else %}
+                                        <input
+                                          type="hidden"
+                                          class="form-control"
+                                          id="shop_admin"
+                                          :value="{{user.id}}"
+                                          name="newShop.shop_admin"
+                                          placeholder="{{user}}"
+                                          
+                                          required="required"
+                                          rows="3" >
+                                          {% endif %}
+                                      </div>
+                                    <div class="form-group">
+                                      <label for="shop_address">Shop Address</label>
+                                      <input
+                                        type="text"
+                                        class="form-control"
+                                        id="shop_address"
+                                        placeholder="Enter Shop Address"
+                                        v-model="newShop.shop_address"
+                                        required="required"
+                                        rows="3">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                                </form>
                               </div>
-                    <div class="form-group">
-                              <label for="shop_address">Shop Address</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="shop_address"
-                                placeholder="Enter Shop Address"
-                                v-model="currentShop.shop_address"
-                                required="required"
-                                rows="3">
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Save changes</button>
-                        </div>
-                        </form>
+                            <div class="loading" v-if="loading===true">Loading&#8230;</div>
+                          </div>
+                          <!-- End of add shop modal -->
+                          <!-- Edit Shop Modal -->
+                          <div class="modal fade" id="editShopModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">EDIT Shop</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <form v-on:submit.prevent="updateShop()">
+                                    <div class="modal-body">
+                                                <div class="form-group">
+                                          <label for="shop_name">Shop Heading</label>
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="shop_name"
+                                            placeholder="Enter Shop Heading"
+                                            v-model="currentShop.shop_name"
+                                            required="required" >
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="shop_owner">Shop Owner</label>
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="shop_owner"
+                                            placeholder="Enter Shop Owner"
+                                            v-model="currentShop.shop_owner"
+                                            required="required"
+                                            rows="3">
+                                        </div>
+                                        <div class="form-group">
+                                            <input
+                                              type="hidden"
+                                              class="form-control"
+                                              id="shop_admin"
+                                             id="shop_admin"
+                                              :value="{{user.id}}"
+                                              name="currentShop.shop_admin"
+                                              placeholder="{{user}}"
+                                              required="required"
+                                              rows="3">
+                                          </div>
+                                <div class="form-group">
+                                          <label for="shop_address">Shop Address</label>
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="shop_address"
+                                            placeholder="Enter Shop Address"
+                                            v-model="currentShop.shop_address"
+                                            required="required"
+                                            rows="3">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                                      <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                    </form>
+                              </div>
+                            </div>
+                            <div class="loading" v-if="loading===true">Loading&#8230;</div>
+                          </div>
+                          <!-- End of edit shop modal -->
+              
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div class="loading" v-if="loading===true">Loading&#8230;</div>
               </div>
-              <!-- End of edit shop modal -->
+            
+              
+            </main>
+
   
-          </div>
-        </div>
-      </div>
       
-  </main>
-            </div>
-        </div>
+      
+  
+         
 {% endif %}
 
 <!-- bootrtap js files -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 <!-- Icons -->
 <script src="{% static 'js/vendor/feather.min.js' %}"></script>
 <script>

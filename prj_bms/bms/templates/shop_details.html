@@ -1,27 +1,33 @@
 
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>BMS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% load static %}
+{% include 'head.html' %}
 
-  {% load static %}
-    
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-  </head>
-
-  <body>
-      {% include 'topnavbar.html' %}
-      <div class="container-fluid">
-        <div class="row">
-        {% include 'sidenavbar.html' %}
+<body class="bg-light">
+    {% include 'topnavbar.html' %}
+      
+    <div class="nav-scroller bg-white shadow-sm">
+        <nav class="nav nav-underline mx-5 px-5" role="tablist">
+          <a class="nav-link active" data-toggle="tab" href="#StockEntry">Stock Entry</a>
+          
+          <a class="nav-link" data-toggle="tab" href="#StockShift">Stock Shifting</a>
+          <a class="nav-link" data-toggle="tab" href="#StockClosing">Closing Balance</a>
+        
+        </nav>
+      </div>
+          <main role="main" class="container">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+                  <div class="lh-100">
+                    <h5 class="mb-0 text-white lh-100">Shop: {{ shop.shop_name}}</h5><br>
+                    <small> Address : {{ shop.shop_address}} | Shop Admin : {{ shop.shop_admin.username}} </small>
+                    
+                  </div>
+                </div>
+              
+                <div class="my-3 p-3 bg-white rounded shadow-sm">
         {% if user.is_authenticated %}
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                <div class="card-header">
+           
+                <!-- <div class="card-header">
                       <div class="d-flex justify-content-between mb-3">
                           <div class="p-2 ">
                               <ul class="nav nav-pills" role="tablist">
@@ -42,8 +48,8 @@
                                         <p class="mb-0">{{ shop.shop_address}}- {{ shop.shop_admin.username}}  </p>
                                     </div>
                                   </div>
-                </div>
-                <br><hr>
+                </div> -->
+              
                 <div class="tab-content">                     
                 <!-- Stock Entry Block -->
                 <div id="StockEntry" class="tab-pane active">
@@ -521,20 +527,20 @@
                                                           v-model="newClosing.close_qty_p"
                                                           ></td>
                                                         <td> ${ sold_p}</td>
-                                                        <td> ${ total_p} - ${ brnd_details.brand_p_sale }</td>
+                                                        <td> ${ total_p}</td>
                                                       </tr>
                                                       <tr> 
                                                          <th scope="row"> Q  - ${ brandsSize.Q  }</th>
                                                           <td>${ op_stk_data.open_q }</td>
                                                           <td>${ in_stk_data.Q}</td>
-                                                          
-    
-                                                        <td>${ shift_given.stock_shift_q }</td>
-                                                        <td>${ shift_taken.stock_shift_q} </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-
+                                                          <td>${ shift_given.stock_shift_q }</td>
+                                                          <td>${ shift_taken.stock_shift_q} </td>
+                                                          <td>
+                                                            <input type="number" name="newClosing.close_qty_q" 
+                                                          class="form-control" id="close_qty_q" placeholder="Enter Closing Qty"
+                                                          v-model="newClosing.close_qty_q"></td>         
+                                                          <td> ${ sold_q}</td>
+                                                          <td> ${ total_q}</td>
                                                       </tr>
                                                       <tr>
                                                           
@@ -545,9 +551,16 @@
                                                         <td>${ shift_given.stock_shift_n }</td>
                                                         <td>${ shift_taken.stock_shift_n} </td>
 
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td><input
+                                                          type="number"
+                                                          name="newClosing.close_qty_n"
+                                                          class="form-control"
+                                                          id="close_qty_n"
+                                                          placeholder="Enter Closing Qty"
+                                                          v-model="newClosing.close_qty_n"
+                                                          ></td>            
+                                                          <td> ${ sold_n}</td>
+                                                          <td> ${ total_n}</td>
               
                                                       </tr>
     
@@ -961,12 +974,12 @@ var myStockShift =  new Vue({
         brands:[],
         shops:[],
         shifts:[],
-        shift_given:{"stock_shift_p": 0,},
-        shift_taken:{"stock_shift_p": 0,},
+        shift_given:{"stock_shift_p": 0, "stock_shift_q": 0, "stock_shift_n": 0,  },
+        shift_taken:{"stock_shift_p": 0, "stock_shift_q": 0, "stock_shift_n": 0, },
        
         brandsSize:[],
         categories:[],
-        op_stk_data:{"open_p": 0},
+        op_stk_data:{"open_p": 0, "open_q": 0, "open_n": 0},
         in_stk_data:{"P": 0, "Q": 0, "N": 0, "L": 0, "Y": 0, "XG": 0 , },
         brnd_details: { "brand_p_sale": 0, "brand_q_sale": 0, "brand_n_sale": 0, "brand_d_sale": 0, "brand_l_sale": 0, "brand_xg_sale": 0, "brand_y_sale": 0 },
         invoices:[],
@@ -998,11 +1011,23 @@ var myStockShift =  new Vue({
       },
       computed: {
         sold_p() {
-      	return (parseInt(this.op_stk_data.open_p) + parseInt(this.in_stk_data.P)  + parseInt(this.shift_taken.stock_shift_p) - parseInt(this.shift_given.stock_shift_p) - parseInt(this.newClosing.close_qty_p)) || 0;
-      },
-      total_p() {
-      	return (parseInt(this.sold_p) * parseInt(this.brnd_details.brand_p_sale)) || 0;
-      },
+          return (parseInt(this.op_stk_data.open_p) + parseInt(this.in_stk_data.P)  + parseInt(this.shift_taken.stock_shift_p) - parseInt(this.shift_given.stock_shift_p) - parseInt(this.newClosing.close_qty_p)) || 0;
+        },
+        total_p() {
+          return (parseInt(this.sold_p) * parseInt(this.brnd_details.brand_p_sale)) || 0;
+        },
+        sold_q() {
+          return (parseInt(this.op_stk_data.open_q) + parseInt(this.in_stk_data.Q)  + parseInt(this.shift_taken.stock_shift_q) - parseInt(this.shift_given.stock_shift_q) - parseInt(this.newClosing.close_qty_q)) || 0;
+        },
+        total_q() {
+          return (parseInt(this.sold_q) * parseInt(this.brnd_details.brand_q_sale)) || 0;
+        },
+        sold_n() {
+          return (parseInt(this.op_stk_data.open_n) + parseInt(this.in_stk_data.N)  + parseInt(this.shift_taken.stock_shift_n) - parseInt(this.shift_given.stock_shift_n) - parseInt(this.newClosing.close_qty_n)) || 0;
+        },
+        total_n() {
+          return (parseInt(this.sold_n) * parseInt(this.brnd_details.brand_n_sale)) || 0;
+        },
       
     },
   
@@ -1087,27 +1112,22 @@ var myStockShift =  new Vue({
         },
         getBrandsSize: function (){
           let api_url = '/api/quantity/';
-          // api_url = `/api/brand/?search=${this.newInvoice.category_id}`;
           this.loading = true;
           this.$http.get(api_url)
-              .then((response) => {
-                this.brandsSize = response.data;
-                var result = {};
-                  for (var i = 0; i < this.brandsSize.length; i++) {
-                    result[this.brandsSize[i].quantity_name] = this.brandsSize[i].quantity_bottles;
-                  }
-                  
-              //  let result = this.brandsSize.map(a => (a.quantity_name)   + a.quantity_bottles);
-              //  this.brandsSize = JSON.stringify(Object.assign({}, reformattedArray));;
-              console.log("some:"+result);
-              this.brandsSize = result;
-
-                this.loading = false;
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
+          .then((response) => {
+            this.brandsSize = response.data;
+            var result = {};
+            for (var i = 0; i < this.brandsSize.length; i++) {
+              result[this.brandsSize[i].quantity_name] = this.brandsSize[i].quantity_bottles;
+            }
+            console.log("some:"+result);
+            this.brandsSize = result;
+            this.loading = false;
+          })
+          .catch((err) => {
+            this.loading = false;
+            console.log(err);
+          })
         },
        
         getOpenData: function(){
@@ -1139,151 +1159,112 @@ var myStockShift =  new Vue({
               })
 
 
-        }, 
-        getInvoicesd: function() {
+        },
+        getInvoicesd: function()
+        {
           var local = new Date();
-            dt = local.toJSON().slice(0,10);
-            console.log(dt)
-
-          // let api_url = '/api/invoice/';
-          let api_url = `/api/invoice/?invoice_date=${this.newClosing.close_date}&brand_id=${this.newClosing.brand_id}`
+          dt = local.toJSON().slice(0,10);
+          console.log(dt)
+          let api_url = `/api/invoice/?shop_id=${shop_id}&invoice_date=${this.newClosing.close_date}&brand_id=${this.newClosing.brand_id}`
           this.loading = true;
           this.$http.get(api_url)
-              .then((response) => {
-                let dtx = response.data;
-                if (dtx.length >0)
-                {
-                  console.log(api_url);
-                // first, convert data into a Map with reduce
-                let counts = dtx.reduce((prev, curr) => {
-                let count = prev.get(curr.invoice_brand_size) || 0;
-                prev.set(curr.invoice_brand_size, curr.invoice_no_of_cases + count);
-                return prev;
-                },
-                new Map());
-                            // then, map your counts object back to an array
-                let reducedObjArr = [...counts].map(([invoice_brand_size, invoice_no_of_cases]) => {
-                return {invoice_brand_size, invoice_no_of_cases}
-                })
-
-              console.log(reducedObjArr);
-              
-                var result = {};
-                  for (var i = 0; i < reducedObjArr.length; i++) {
-                    result[reducedObjArr[i].invoice_brand_size] = reducedObjArr[i].invoice_no_of_cases;
+          .then((response) => 
+          {
+            console.log("invoice: ", api_url)
+            let dtx = response.data;
+            if (dtx.length >0)
+            {
+              // first, convert data into a Map with reduce
+              let counts = dtx.reduce((prev, curr) => {
+              let count = prev.get(curr.invoice_brand_size) || 0;
+              prev.set(curr.invoice_brand_size, curr.invoice_no_of_cases + count);
+              return prev;
+              },
+              new Map());
+              // then, map your counts object back to an array
+              let reducedObjArr = [...counts].map(([invoice_brand_size, invoice_no_of_cases]) => {
+              return {invoice_brand_size, invoice_no_of_cases}
+              })
+              var result = {};
+              for (var i = 0; i < reducedObjArr.length; i++) 
+              {
+                result[reducedObjArr[i].invoice_brand_size] = reducedObjArr[i].invoice_no_of_cases;
+              }
+              console.log(result);
+              //this.in_stk_data = result;
+              update(this.in_stk_data, result);
+              function update (targetObject, obj) {
+                Object.keys(obj).forEach(function (key) {
+                  if ( 'object' === typeof obj[key] && !Array.isArray(obj[key]) ) {
+                    update(targetObject[key], obj[key])
                   }
-                  console.log(result);
-                  //this.in_stk_data = result;
-                  update(this.in_stk_data, result);
-
-                  function update (targetObject, obj) {
-                  Object.keys(obj).forEach(function (key) {
-                    if ( 'object' === typeof obj[key] && !Array.isArray(obj[key]) ) {
-                      update(targetObject[key], obj[key])
-                    }
-                    else if ( 'string' === typeof obj[key] || 'number' === typeof obj[key] ) {
-                      targetObject[key] = obj[key]
-                    }
-                  })
-                }
-
-                var res = {};
-                
-                // this.in_stk_data = dtx[0];
-
-              
-                console.log(this.in_stk_data);
-            
-                this.loading = false;
-                }
-    
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
+                  else if ( 'string' === typeof obj[key] || 'number' === typeof obj[key] ) {
+                    targetObject[key] = obj[key]
+                  }
+                })
+              }
+              console.log(this.in_stk_data);
+              this.loading = false;
+            }
+          })
+          .catch((err) => {
+            this.loading = false;
+            console.log(err);
+          })
         },
        
-        getShiftData: function (){
-         
+        getShiftData: function ()
+        {
           let api_url = '/api/shift/';
           api_url = `/api/shift/?search=${this.newClosing.brand_id}`;
           this.loading = true;
           this.$http.get(api_url)
-              .then((response) => {
-               // this.shifts = response.data;
-               
-                    let sft_data= response.data;
-                    let sft_gvn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_from === {{shop.shop_id}}) ;
-                    let sft_tkn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_to === {{shop.shop_id}}) || 0;
-
-                    // delete sft_gvn.brand_id;
-                    // delete sft_gvn.stock_shift_date;
-                    // delete sft_gvn.stock_shift_to;
-                    // delete sft_gvn.stock_shift_from;
-                    
-                    if (sft_gvn){
-                      this.shift_given = sft_gvn;
-                    }
-                    if (sft_tkn){
-                      this.shift_taken = sft_tkn;
-                    }
-                    console.log("given:" + sft_gvn);
-                    //this.shift_given = sft_gvn;
-                    // delete sft_tkn.brand_id;
-                    // delete sft_tkn.stock_shift_date;
-                    // delete sft_tkn.stock_shift_to;
-                    // delete sft_tkn.stock_shift_from;
-                    console.log("data found as tken");
-                    
-                    
-                    this.getOpenData();
-                    this.getInvoicesd();
-                    this.getBrandDetail();
-                   
-                 //   getInvoices
-        
-                    //console.log(this.shifts);
-                    
-                    console.log("slectdt: " +this.newClosing.close_date );
-                   // this.newInvoice.invoice_brand_qty *  qty_btl.quantity_bottles; 
-                   this.loading = false;
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
+          .then((response) => {
+            console.log("Shift:", api_url);
+            let sft_data= response.data;
+            let sft_gvn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_from === {{shop.shop_id}}) ;
+            let sft_tkn = sft_data.find(u => (new Date (Date.parse(u.stock_shift_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.stock_shift_to === {{shop.shop_id}}) || 0;
+            if (sft_gvn)
+            {
+              this.shift_given = sft_gvn;
+            }
+            if (sft_tkn){
+              this.shift_taken = sft_tkn;
+            }
+            this.getOpenData();
+            this.getInvoicesd();
+            this.getBrandDetail();
+            this.loading = false;
+            })
+            .catch((err) => {
+              this.loading = false;
+              console.log(err);
+            })
         },
-        getBrandDetail: function(){
+
+        getBrandDetail: function()
+        {
           let api_url = '/api/open/';
           api_url = `/api/brand-detail/?brand_id=${this.newClosing.brand_id}`
           this.loading = true;
           this.$http.get(api_url)
-              .then((response) => {
-                let brnd_data = response.data;
-                
-                console.log(brnd_data);
-                if (brnd_data.length > 0){
-                  this.brnd_details = brnd_data[0];
-                }
-                // else{
-                //   // this.op_stk_data = this.op_stk_data;
-                // }
-                
-                // let op_stk_filt = this.op_stk_data.find(u => (new Date (Date.parse(u.open_date))).toISOString().slice(0,10) === this.newClosing.close_date &&	u.open_shop_id === {{shop.shop_id}}) ||0 ;
-                
-                this.loading = false;
-              })
-              .catch((err) => {
-                this.loading = false;
-                console.log(err);
-              })
-
-
-        }, 
-
-        }
-        });
+          .then((response) => {
+            let brnd_data = response.data;
+            console.log(brnd_data);
+            if (brnd_data.length > 0){
+              this.brnd_details = brnd_data[0];
+            }
+            this.loading = false;
+          })
+          .catch((err) => {
+            this.loading = false;
+            console.log(err);
+          })
+        },
+      
+      
+      }
+    });
        
   </script>
   </body>
