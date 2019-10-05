@@ -17,27 +17,28 @@
               
                 <div class="my-3 p-3 bg-white rounded shadow-sm">
                   <div id="starting">
-                    <div class="form-row  pt-2 mt-0 pb-2 mb-0 form-inline">
-                      <div class="col-7 mb-1">
-                        <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">New Category</button>
-                      </div>
-                      <div class="col-auto ">
-                            <input class="form-control" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
-                      </div>
+                    <div class="form-row  pt-2 mt-0 pb-2 mb-0 ">
                       <div class="col">
-                            <button class="btn btn-outline-success ml-2" v-on:click.prevent="getCategories()">Search</button>
-         
+                        <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">
+                            <i class="fas fa-plus"></i> New Category</button>
+                      </div>
+                      <div class="col  ">
+                        <div class="row form-inline">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
+                     
+                            <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCategories()">Search</button>
+         </div>
                          
                       </div>
                     </div>
                   
                   
-                    <div class="row py-0 px-2  my-2">
+                    <div class="row py-0 px-2  my-2 table-responsive">
                     
                       <table class="table table-hover ">
                         <thead>
                           <tr>
-                            <th scope="col">•</th>
+                            <th scope="col"></th>
                             <th scope="col">Category</th>
                             <th scope="col">Description </th>
 
@@ -46,7 +47,7 @@
                         </thead>
                         <tbody>
                           <tr v-for="category in categorys">
-                            <th scope="row">•</th>
+                            <th scope="row"></th>
                             <td>${category.category_name}</td>
                             <td>${category.category_description}</td>
                             <td >

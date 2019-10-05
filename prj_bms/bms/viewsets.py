@@ -27,7 +27,7 @@ class CategoryViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ReadCategorySerializer
-        elif self.request.method == 'POST':
+        elif self.request.method == 'POST' or 'PUT':
             return CategorySerializer
         else:
             return ReadCategorySerializer
@@ -42,7 +42,7 @@ class BrandViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ReadBrandSerializer
-        elif self.request.method == 'POST':
+        elif self.request.method == 'POST' or 'PUT':
             return BrandSerializer
         else:
             return ReadBrandSerializer
@@ -74,7 +74,7 @@ class UserViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
             return ReadUserSerializer
     serializer_class = UserSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ['username','user_id',]
+    search_fields = ['username','user_id', ]
    
 class BmsUserViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
@@ -100,11 +100,11 @@ class ShopViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
             return ReadShopSerializer
     serializer_class = ShopSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('shop_name', 'shop_owner', 'shop_address', 'shop_admin')
+    search_fields = ('shop_name', 'shop_keeper', 'shop_address', 'shop_admin')
 
 class QuantityViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL
-    queryset = Quantity.objects.all()
+    queryset = Quantity.objects.all().order_by('quantity_bottles')
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ReadQuantitySerializer
@@ -115,6 +115,8 @@ class QuantityViewSet(LoginRequiredMixin, viewsets.ModelViewSet):
     serializer_class = QuantitySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('quantity_name', 'quantity_bottles')
+
+
 
 class ShiftViewSet(LoginRequiredMixin,viewsets.ModelViewSet):
     login_url = settings.LOGIN_REDIRECT_URL

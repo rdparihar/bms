@@ -5,7 +5,7 @@
         </button>
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-            <div class="navbar-nav">
+            <div class="navbar-nav navbar-header">
                 <!-- <a href="{% url 'home' %}" class="nav-item nav-link">Home</a> -->
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Main</a>
@@ -14,6 +14,9 @@
                         <a href="{% url 'brand' %}" class="dropdown-item">Brand</a>
                         <a href="{% url 'shop' %}" class="dropdown-item">Shop</a>
                         <a href="{% url 'user' %}" class="dropdown-item">Users</a>
+                        <a class="dropdown-item"" href="{% url 'quantity' %}">
+                                 Quantities
+                              </a>
                     </div>
                 </div>
                 <div class="nav-item dropdown">

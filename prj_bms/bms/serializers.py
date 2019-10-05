@@ -20,21 +20,21 @@ class ReadBrandSerializer(serializers.HyperlinkedModelSerializer):
     category_id = CategorySerializer()
     class Meta:
         model = Brand
-        fields =  ['brand_id','brand_name','brand_description','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
+        fields =  ['brand_id','brand_name','brand_code','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
 
 class BrandSerializer(serializers.ModelSerializer):
         brand_id = serializers.ReadOnlyField()
         category_id = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Category.objects.all())
         class Meta:
             model = Brand
-            fields =  ['brand_id','brand_name','brand_description','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
+            fields =  ['brand_id','brand_name','brand_code','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
 
 class BrandDetailSerializer(serializers.ModelSerializer):
     brand_id = serializers.ReadOnlyField()
     category_id = serializers.PrimaryKeyRelatedField(read_only=False, queryset=Category.objects.all())
     class Meta:
         model = Brand
-        fields =  ['brand_id','brand_name','brand_description','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
+        fields =  ['brand_id','brand_name','brand_code','category_id','brand_p_cost','brand_q_cost','brand_n_cost','brand_d_cost','brand_l_cost','brand_xg_cost','brand_y_cost','brand_p_sale','brand_q_sale','brand_n_sale','brand_d_sale','brand_l_sale','brand_xg_sale','brand_y_sale']
 
 
 
@@ -44,6 +44,8 @@ class QuantitySerializer(serializers.HyperlinkedModelSerializer):
         model = Quantity
         fields = ['quantity_name','quantity_bottles']
 
+
+
 class ReadQuantitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Quantity
@@ -52,7 +54,7 @@ class ReadQuantitySerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['id','username', 'first_name','last_name', 'password']
+        fields = ['id','username', 'first_name','last_name', 'password', 'is_active']
     def create(self, validated_data):
         user = super(UserSerializer, self).create(validated_data)
         user.set_password(validated_data['password'])
@@ -62,7 +64,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class ReadUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['username','id']
+        fields = ['username','id', 'is_active']
 
 class BmsUserSerializer(serializers.ModelSerializer):
     username = serializers.PrimaryKeyRelatedField(read_only=False, queryset=User.objects.all())
@@ -81,14 +83,14 @@ class ReadShopSerializer(serializers.HyperlinkedModelSerializer):
     shop_admin = BmsUserSerializer()
     class Meta: 
         model = Shop
-        fields =   ['shop_id','shop_name', 'shop_owner', 'shop_address','shop_admin']
+        fields =   ['shop_id','shop_name', 'shop_keeper', 'shop_address','shop_admin']
 
 class ShopSerializer(serializers.HyperlinkedModelSerializer):
     shop_id = serializers.ReadOnlyField()
     shop_admin = serializers.PrimaryKeyRelatedField(read_only=False, queryset=BmsUser.objects.all())
     class Meta:
         model = Shop
-        fields =   ['shop_id','shop_name', 'shop_owner', 'shop_address','shop_admin']
+        fields =   ['shop_id','shop_name', 'shop_keeper', 'shop_address','shop_admin']
 
 
 class ReadShiftSerializer(serializers.HyperlinkedModelSerializer):

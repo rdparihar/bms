@@ -21,8 +21,8 @@ class Category(models.Model):
 
 class Brand(models.Model):
     brand_id = models.IntegerField(primary_key=True, verbose_name = 'Brand Id')
+    brand_code = models.IntegerField(unique=True, verbose_name = 'Brand Code')
     brand_name = models.CharField(max_length=200, verbose_name = 'Brand Name')
-    brand_description = models.CharField(max_length=200, verbose_name = 'Brand Description')
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand_p_cost = models.DecimalField(max_digits=22, decimal_places=2,default=Decimal(0.00))
     brand_q_cost = models.DecimalField(max_digits=22, decimal_places=2,default=Decimal(0.00))
@@ -63,7 +63,7 @@ class Quantity(models.Model):
 
 class BmsUser(models.Model):
     USER_ROLE = ( ('A', 'ADMIN'), ('S', 'SUBADMIN'), ('U', 'USER') )
-    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.OneToOneField(User, on_delete=models.CASCADE)
     user_id = models.IntegerField(primary_key=True, verbose_name = 'User Id')
     user_first_name = models.CharField(max_length=50, verbose_name = 'First Name')
     user_last_name = models.CharField(max_length=50, verbose_name = 'Last Name')
@@ -81,7 +81,7 @@ class BmsUser(models.Model):
 class Shop(models.Model):
     shop_id = models.IntegerField(primary_key=True, verbose_name = 'Shop Id')
     shop_name = models.CharField(max_length=200, verbose_name = 'Shop Name')
-    shop_owner = models.CharField(max_length=200, verbose_name = 'Shop owner')
+    shop_keeper = models.ForeignKey(BmsUser, related_name='+', blank=True, null=True, on_delete=models.SET_NULL)
     shop_address = models.CharField(max_length=200, verbose_name = 'Shop Address')
     shop_admin = models.ForeignKey(BmsUser, on_delete=models.CASCADE)
 	

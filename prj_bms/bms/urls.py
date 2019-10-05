@@ -20,6 +20,8 @@ urlpatterns = [
     path('shift/', TemplateView.as_view(template_name='shifts.html'), name="shift"),
     # path('account/', TemplateView.as_view(template_name='registration/login.html'), name="account"),
     path('user/', TemplateView.as_view(template_name='user.html'), name="user"),  
+    path('new/', TemplateView.as_view(template_name='new.html'), name="new"),  
+    path('created/', TemplateView.as_view(template_name='created.html'), name="created"),  
     
     path('error/', TemplateView.as_view(template_name='error.html'), name="error"),  
     path('test/', TemplateView.as_view(template_name='test.html')),

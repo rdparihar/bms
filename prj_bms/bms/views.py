@@ -25,9 +25,11 @@ def sig_user_logged_in(sender, user, request, **kwargs):
     request.session['isSubAdmin'] = True
     request.session['email'] = user.email
     request.session['username'] = user.username
+    request.session['is_super'] = user.is_superuser
     username  = request.session.get('username')
     request.session['userid'] = user.id
     request.session['isBmsUser'] = True
+    request.session['isSuperUser'] = user.is_superuser
 
     # request.session['emp_id'] = EmpProfile.objects.filter(username_id__exact = request.user.id).values('emp_id')[0]['emp_id']
     
@@ -35,6 +37,7 @@ def sig_user_logged_in(sender, user, request, **kwargs):
     isAdmin = request.session.get('isAdmin',False)
     isUser = request.session.get('isUser',False)
     isSubAdmin = request.session.get('isSubAdmin',False)
+    isSuperUser = request.session.get('isSuperUser',False)
 
     email = request.session.get('email','')
     emp_id = request.session.get('emp_id')
@@ -43,7 +46,7 @@ def sig_user_logged_in(sender, user, request, **kwargs):
     return render(
         request,
         'registration/login.html',
-        context = {'isLoggedIn':isLoggedIn,'isAdmin':isAdmin,'isUser':isUser, 'isSubAdmin':isSubAdmin, 'email':email, 'emp_id':emp_id},
+        context = {'isLoggedIn':isLoggedIn,'isAdmin':isAdmin,'isUser':isUser, 'isSubAdmin':isSubAdmin, 'email':email, 'emp_id':emp_id, 'isSuperUser':isSuperUser, },
     )
 
 
@@ -59,15 +62,31 @@ class ShopListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        isAdmin = self.request.session['isAdminUser']
+        isAdmin = self.request.session['isAdmin']
         isUser = self.request.session['isUser']
         isSubAdmin = self.request.session['isSubAdmin']
+        isSuperUser = self.request.session['isSuperUser']
 
-        context = { "isAdmin" : isAdmin, 'isUser':isUser, 'isSubAdmin':isSubAdmin}
+        context = { "isAdmin" : isAdmin, 'isUser':isUser, 'isSubAdmin':isSubAdmin, 'isSuperUser': isSuperUser}
+       
+
         userid = self.request.user.id
         context['user'] = self.request.user
         context['bms_users'] = BmsUser.objects.all()
-        context['shop_list'] = self.model.objects.filter(shop_admin = userid)
+        print(isSuperUser)
+        print(isSuperUser)
+
+
+        if isAdmin or isSuperUser:
+            context['shop_list'] = self.model.objects.all()
+        else:
+            if isSubAdmin:
+                context['shop_list'] = self.model.objects.filter(shop_admin = userid)
+            elif isUser:
+                context['shop_list'] = self.model.objects.filter(shop_keeper = userid)
+            else:
+                pass
+        
         return context
  
      
@@ -93,7 +112,7 @@ class AdminView(LoginRequiredMixin, generic.ListView):
         
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        isAdmin = self.request.session['isAdminUser']
+        isAdmin = self.request.session['isAdmin']
         print(isAdmin)
         context = { "isAdmin" : isAdmin}
 
@@ -126,27 +145,36 @@ def HomeView(request, id=None):
     # user = get_object_or_404(User, id=id) 
     # user = get_object_or_404(User) 
     request.session['userid'] = request.user.id
+    request.session['isSuperUser'] = request.user.is_superuser
     id = request.session.get('userid')
+    isSuperUser = request.session.get('isSuperUser')
     isAdminUser = False  # create the user seesion for admin true
     isUser = False
     isSubAdmin = False
-    request.session['isAdminUser'] = isAdminUser
+    request.session['isAdmin'] = isAdminUser
     request.session['isUser'] = isUser
     request.session['isSubAdmin'] = isSubAdmin
     print(id)
+    bms_count=BmsUser.objects.filter(user_role = 'A').count()
+    if bms_count ==0:
+        return HttpResponseRedirect("/new/")
     try:
         bms_role=BmsUser.objects.filter(username = id).values('user_role')[0]['user_role']
+
         request.session['isBmsUser'] = True
     except:
         request.session['isBmsUser'] = True
         # context = {'isLoggedIn':isLoggedIn,}
+        if isSuperUser:
+            request.session['isSuperUser'] = True
+            return HttpResponseRedirect("/home/")
 
         return HttpResponseRedirect("/error/")
 
     if bms_role =='A':
         print("You are admin")
         request.session['isBmsUser'] = True
-        request.session['isAdminUser'] = True
+        request.session['isAdmin'] = True
         return HttpResponseRedirect("/home/")
     else:
         # bms_role_s=BmsUser.objects.all().filter(username = id, user_role = 'S').values('user_role')[0]['user_role']

@@ -6,7 +6,7 @@
 <body class="bg-light">
     {% include 'topnavbar.html' %}
       
-    <div class="nav-scroller bg-white  shadow-sm">
+    <div class="nav-scroller bg-white  shadow-rd2">
         <nav class="nav nav-underline justify-content-center " role="tablist">
           <a class="nav-link active" data-toggle="tab" href="#StockEntry">Stock Entry</a>
           
@@ -32,8 +32,9 @@
                 <div class="tab-content">                     
                 <!-- Stock Entry Block -->
                 <div id="StockEntry" class="tab-pane active">
-                  <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-orange rounded shadow-sm">
-                        <div class="lh-100">
+                  <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-orange rounded shadow-sm  shadow-rd " >
+                     
+                         <div class="lh-100 ">
                             <h5>Stock Entry</h5>
                         </div>
                       <div class="lh-100 ml-auto">
@@ -42,11 +43,14 @@
                       </div>
                     </div>
 
-                    <div class="my-3 p-3 bg-white rounded shadow-sm">
-              
-                  <div class="alert alert-warning" v-if="serverError">
-                      <strong>Warning!</strong>  Server returned error, most likely ${ msg } or session has expired, please refresh the page and try again.
-                    </div>
+                    <div class="my-3 p-3 bg-white rounded shadow-sm "style="box-shadow: 0px 4px 6px -2px #888888 !important;">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" v-if="serverError">
+                            <strong>Warning !</strong> ${ msg }.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                 
                   <div class=" " v-for="(invoice_product, k) in invoice_products" :key="k">
 
                       <form v-on:submit.prevent="addInvoice()">
@@ -64,11 +68,25 @@
                                     <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
                                   </select>
                               </div>
+                              <div class="col ">
+                                  <label for="brand_code">Brand Code</label>
+                                  <input
+                                  type="text"
+                                  id="brand_code"
+                                  class="form-control"
+                                  v-model.number="newInvoice.brand_code" 
+                                  name="newInvoice.brand_id"
+                                  placeholder="Enter Brand Code"
+                                  required="required"
+                                  value=""
+                                  rows="3" @change="getRatesb()">
+                              </div>
                             </div>
 
                           <br>
 
-                          <div class="row">
+                      <div class="row form-inline ">
+
                               <!-- <div class="col">
                                 <label for="invoice_transaction_id">Invoice ID </label>
                                 <input
@@ -80,19 +98,7 @@
                                   
                                   required="required" >
                                 </div>   -->
-                                <div class="col">
-                                    <label for="invoice_brand_qty">Brand Code</label>
-                                    <input
-                                    type="text"
-                                    id="invoice_brand_qty"
-                                    class="form-control"
-                                    v-model.number="newInvoice.brand_id" 
-                                    name="newInvoice.brand_id"
-                                    placeholder="Enter Brand Code"
-                                    required="required"
-                                    value=""
-                                    rows="3" @change="getRatesb()">
-                                </div>
+                               
                                 <div class="col">
                                     <label for="invoice_brand_size">Brand Size</label>
                                     <select name="newInvoice.invoice_brand_size" class="form-control" v-model="newInvoice.invoice_brand_size"
@@ -101,6 +107,7 @@
                                         ${bsize.quantity_name} - ${bsize.quantity_bottles}
                                     </option>
                                     </select>
+                                    
                                     
                                 </div>
                                 
@@ -117,7 +124,7 @@
                                     rows="3" @change="calBottle()">
                                 </div>
                                 <div class="col">
-                                    <label for="invoice_rate_per_case">Rate/Bottle </label>
+                                    <label for="invoice_rate_per_case">Brand Rate </label>
                                     <input
                                     type="text"
                                     id="invoice_rate_per_case"
@@ -128,7 +135,7 @@
                                     rows="3" >
                                 </div>
                                 <div class="col">
-                                    <label for="invoice_no_of_cases">No.of cases</label>
+                                    <label for="invoice_no_of_cases">Cases</label>
                                     <input
                                     type="text"
                                     id="invoice_no_of_cases"
@@ -165,7 +172,8 @@
                         Add
                     </button>
                     </div>
-                    <div class="my-3 p-3 bg-white rounded shadow-sm">
+                    <div class="my-3 p-3 bg-white rounded shadow-rd">
+                        <div class="table-responsive">
                     <table class="table table-hover">
                       <thead>
                           <tr>
@@ -193,7 +201,7 @@
                         </tr>
                       </tbody>
                     </table>
-                
+                </div>
               
                     </div>
               <div class="loading" v-if="loading===true">Loading&#8230;</div>                    
@@ -204,7 +212,7 @@
 
                 <div id="StockShift" class="tab-pane ">
 
-                        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-orange rounded shadow-sm">
+                        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-orange rounded shadow-rd">
                         <div class="lh-100">
                             <h5>Stock Shifting</h5>
                         </div>
@@ -213,208 +221,227 @@
                           <small> Address : {{ shop.shop_address}} | Shop Admin : {{ shop.shop_admin.username}} </small>
                       </div>
                     </div>
-                            <div class="my-3 p-3 bg-white rounded shadow-sm">
-                            <div class="modal-body invoice-box ">
-                                <form v-on:submit.prevent="addShift()">     
-                                        <div class="row">
-                                                <div class="col">
-                                                    <label for="category_id">category ID</label>
-                                                    <select v-model.number="newShift.category_id" name="newShift.category_id" class="form-control" @change="getBrands()">
-                                                      <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
-                                                    </select>
-                                                </div>
-                                                <div class="col">
-                                                    <label for="brand_id">Brand ID</label>
-                                                    <select v-model.number="newShift.brand_id" name="newShift.brand_id"
-                                                      class="form-control" @change="getRates()">
-                                                      <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
-                                                    </select>
-                                                </div>
+
+                    <div class="my-3 p-3 bg-white rounded shadow-rd">
+                      <div class="container">
+                          <form v-on:submit.prevent="addShift()"> 
+                            <div>
+                                <div class="row border border-light mb-2 pb-2 ">
+                                    <div class="col">
+                                        <label for="stock_shift_date">Enter the Date</label>
+                                        <input
+                                            type="date"
+                                            name="newShift.stock_shift_date"
+                                            class="form-control"
+                                            id="stock_shift_date"
+                                            placeholder="Enter the Date"
+                                            v-model="newShift.stock_shift_date"
+                                            required="required" >
+                                    </div> 
+                                    <div class="col">
+                                            <label for="stock_shift_to">Shift To:</label>
+                                            <select
+                                                name="newShift.stock_shift_to" 
+                                                class="form-control" 
+                                                v-model="newShift.stock_shift_to"
+                                                name="newShift.stock_shift_to" 
                                                 
-                                        
-                                              </div>                               
-                                    <div class="row">
-                                        
+                                                @change="calBottle()">
+                                                <option 
+                                                    v-for="shop in shops"  
+                                                    :value="shop.shop_id">
+                                                        ${shop.shop_name} 
+                                                </option>
+                                            </select>
                                     </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="stock_shift_date">Enter the Date</label>
-                                            <input
-                                                type="date"
-                                                name="newShift.stock_shift_date"
-                                                class="form-control"
-                                                id="stock_shift_date"
-                                                placeholder="Enter the Date"
-                                                v-model="newShift.stock_shift_date"
-                                                required="required" >
-                                        </div> 
-                                        <div class="col">
-                                                <label for="stock_shift_to">Shift To:</label>
-                                                <select
-                                                    name="newShift.stock_shift_to" 
-                                                    class="form-control" 
-                                                    v-model="newShift.stock_shift_to"
-                                                    name="newShift.stock_shift_to" 
-                                                    
-                                                    @change="calBottle()">
-                                                    <option 
-                                                        v-for="shop in shops"  
-                                                        :value="shop.shop_id">
-                                                            ${shop.shop_name} 
-                                                    </option>
-                                                </select>
-                                        </div>
-                                    </div>
-        
-                                    <br>
-                                    <div class="row">
-                                      <div class="col">
-                                          <label for="stock_shift_p">P:</label>
-
+                                    
+                                                                  <div class="col">
+                                          <label for="category_id">Category</label>
+                                          <select v-model.number="newShift.category_id" name="newShift.category_id" class="form-control" @change="getBrands()">
+                                            <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
+                                          </select>
                                       </div>
                                       <div class="col">
-                                          <input type="hidden" 
-                                          class="form-control" 
-                                          v-model="newShift.stock_shift_p"
-                                          name="newShift.stock_shift_p"
-                                          placeholder="P" readonly>
+                                          <label for="brand_id">Brand</label>
+                                          <select v-model.number="newShift.brand_id" name="newShift.brand_id"
+                                            class="form-control" @change="getRates()">
+                                            <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
+                                          </select>
+                                      </div>
+                                      <div class="col ">
+                                          <label for="brand_code">Brand Code</label>
+                                          <input
+                                          type="text"
+                                          id="brand_code"
+                                          class="form-control"
+                                          v-model.number="newShift.brand_code" 
+                                          name="newShift.brand_id"
+                                          placeholder="Enter Brand Code"
+                                          required="required"
+                                          value=""
+                                          rows="3" @change="getRatesb()">
+                                      </div>
+                              
+                                    </div>   
+                            </div>                            
+                          <div class="row">
+                              
+                          </div>
+                          
 
-                                      </div>
-                                      <div class="col">
-                                          <input type="text" 
-                                          class="form-control" 
-                                          v-model="newShift.stock_shift_p"
-                                          name="newShift.stock_shift_p"
-                                          placeholder="P">
-
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col"><label for="stock_shift_q">Q:</label></div>
-                                        <div class="col">
-                                            
-                                            <input type="hidden" 
-                                            class="form-control"
-                                            v-model="newShift.stock_shift_q"
-                                            name="newShift.stock_shift_q"
-                                            placeholder="Q" readonly>
-                                        </div>
-                                        <div class="col">
-                                        
-                                            <input type="text" 
-                                            class="form-control"
-                                            v-model="newShift.stock_shift_q"
-                                            name="newShift.stock_shift_q"
-                                            placeholder="Q">
-                                        </div>
-                                      </div>
-                                      <div class="row">
-                                        <div class="col">                                            <label for="stock_shift_n">N:</label>
-                                        </div>
-                                        
-                                        <div class="col">
-                                            
-                                          <input type="hidden" 
-                                          class="form-control"
-                                          v-model="newShift.stock_shift_q"
-                                          name="newShift.stock_shift_q"
-                                          placeholder="Q" readonly>
-                                      </div>
-                                        <div class="col">
-                                            <input type="text" 
-                                            class="form-control" 
-                                            v-model="newShift.stock_shift_n"
-                                            name="newShift.stock_shift_n"
-                                            placeholder="N">
-                                        </div>
-                                      </div> 
-                                      <div class="row">
-                                        <div class="col"><label for="stock_shift_d">D:</label></div>
-                                        <div class="col">
-                                            
-                                          <input type="hidden" 
-                                          class="form-control"
-                                          v-model="newShift.stock_shift_q"
-                                          name="newShift.stock_shift_q"
-                                          placeholder="Q" readonly>
-                                      </div>
-                                        <div class="col">
-                                            
-                                            <input type="text" 
-                                            class="form-control" 
-                                            name="newShift.stock_shift_d"
-                                            v-model="newShift.stock_shift_d"
-                                            placeholder="D" >
-                                        </div>
-                                      </div> 
-                                      <div class="row">
-                                        <div class="col"><label for="stock_shift_l">L:</label></div>
-                                        <div class="col">
-                                            
-                                          <input type="hidden" 
-                                          class="form-control"
-                                          v-model="newShift.stock_shift_q"
-                                          name="newShift.stock_shift_q"
-                                          placeholder="Q" readonly>
-                                      </div>
-                                        <div class="col">
-                                            
-                                            <input type="text" 
-                                            class="form-control" 
-                                            name="newShift.stock_shift_l"
-                                            v-model="newShift.stock_shift_l"
-                                            placeholder="L">
-                                        </div>
-                                      </div> 
-                                      <div class="row">
-                                        <div class="col"> <label for="stock_shift_xg">XG:</label>
-                                        </div>
-                                        <div class="col">
-                                            
-                                          <input type="hidden" 
-                                          class="form-control"
-                                          v-model="newShift.stock_shift_q"
-                                          name="newShift.stock_shift_q"
-                                          placeholder="Q" readonly>
-                                      </div>
-                                        <div class="col">
-                                            <input type="text" 
-                                            class="form-control" 
-                                            name="newShift.stock_shift_xg"
-                                            v-model="newShift.stock_shift_xg"
-                                            placeholder="XG">
-                                        </div>
-                                      </div> 
-                                      <div class="row">
-                                        <div class="col"><label for="stock_shift_y">Y:</label></div>
-                                        <div class="col">
-                                            
-                                          <input type="hidden" 
-                                          class="form-control"
-                                          v-model="newShift.stock_shift_q"
-                                          name="newShift.stock_shift_q"
-                                          placeholder="Q" readonly>
-                                      </div>
-                                        <div class="col">
-                                            
-                                            <input type="text" 
-                                            class="form-control" 
-                                            name="newShift.stock_shift_y"
-                                            v-model="newShift.stock_shift_y"
-                                            placeholder="Y">
-                                        </div>
-                                                                      
-                                    </div>
-                                   
-                                    <br>
-                                
-                                <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                            </div>
-                                </form>
-                            </div>
+                          <br>
+                          <div class="row">
+                           
+                            
+                            <div class="col">
+                                <label for="stock_shift_p">P:</label>
 
                             </div>
+                            <div class="col">
+                                <input type="hidden" 
+                                class="form-control form-control-sm" 
+                                v-model="newShift.stock_shift_p"
+                                name="newShift.stock_shift_p"
+                                placeholder="P" readonly>
+
+                            </div>
+                            <div class="col">
+                                <input type="text" 
+                                class="form-control form-control-sm" 
+                                v-model="newShift.stock_shift_p"
+                                name="newShift.stock_shift_p"
+                                placeholder="P">
+
+                            </div>
+                          </div>
+                          <div class="row">
+                            
+                            <div class="col"><label for="stock_shift_q">Q:</label></div>
+                              <div class="col">
+                                  
+                                  <input type="hidden" 
+                                  class="form-control form-control-sm"
+                                  v-model="newShift.stock_shift_q"
+                                  name="newShift.stock_shift_q"
+                                  placeholder="Q" readonly>
+                              </div>
+                              <div class="col">
+                              
+                                  <input type="text" 
+                                  class="form-control form-control-sm"
+                                  v-model="newShift.stock_shift_q"
+                                  name="newShift.stock_shift_q"
+                                  placeholder="Q">
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col">             <label for="stock_shift_n">N:</label>
+                              </div>
+                              
+                              <div class="col">
+                                  
+                                <input type="hidden" 
+                                class="form-control form-control-sm"
+                                v-model="newShift.stock_shift_q"
+                                name="newShift.stock_shift_q"
+                                placeholder="Q" readonly>
+                            </div>
+                              <div class="col">
+                                  <input type="text" 
+                                  class="form-control form-control-sm" 
+                                  v-model="newShift.stock_shift_n"
+                                  name="newShift.stock_shift_n"
+                                  placeholder="N">
+                              </div>
+                            </div> 
+                            <div class="row">
+                              <div class="col">
+                                <label for="stock_shift_d">D:</label></div>
+                              <div class="col">
+                                  
+                                <input type="hidden" 
+                                class="form-control form-control-sm"
+                                v-model="newShift.stock_shift_q"
+                                name="newShift.stock_shift_q"
+                                placeholder="Q" readonly>
+                            </div>
+                              <div class="col">
+                                  
+                                  <input type="text" 
+                                  class="form-control form-control-sm" 
+                                  name="newShift.stock_shift_d"
+                                  v-model="newShift.stock_shift_d"
+                                  placeholder="D" >
+                              </div>
+                            </div> 
+                            <div class="row">
+                              <div class="col"><label for="stock_shift_l">L:</label></div>
+                              <div class="col">
+                                  
+                                <input type="hidden" 
+                                class="form-control form-control-sm"
+                                v-model="newShift.stock_shift_q"
+                                name="newShift.stock_shift_q"
+                                placeholder="Q" readonly>
+                            </div>
+                              <div class="col">
+                                  
+                                  <input type="text" 
+                                  class="form-control form-control-sm" 
+                                  name="newShift.stock_shift_l"
+                                  v-model="newShift.stock_shift_l"
+                                  placeholder="L">
+                              </div>
+                            </div> 
+                            <div class="row">
+                              <div class="col"> <label for="stock_shift_xg">XG:</label>
+                              </div>
+                              <div class="col">
+                                  
+                                <input type="hidden" 
+                                class="form-control form-control-sm"
+                                v-model="newShift.stock_shift_q"
+                                name="newShift.stock_shift_q"
+                                placeholder="Q" readonly>
+                            </div>
+                              <div class="col">
+                                  <input type="text" 
+                                  class="form-control form-control-sm" 
+                                  name="newShift.stock_shift_xg"
+                                  v-model="newShift.stock_shift_xg"
+                                  placeholder="XG">
+                              </div>
+                            </div> 
+                            <div class="row">
+                              <div class="col"><label for="stock_shift_y">Y:</label></div>
+                              <div class="col">
+                                  
+                                <input type="hidden" 
+                                class="form-control form-control-sm"
+                                v-model="newShift.stock_shift_q"
+                                name="newShift.stock_shift_q"
+                                placeholder="Q" readonly>
+                            </div>
+                              <div class="col">
+                                  
+                                  <input type="text" 
+                                  class="form-control form-control-sm" 
+                                  name="newShift.stock_shift_y"
+                                  v-model="newShift.stock_shift_y"
+                                  placeholder="Y">
+                              </div>
+                                                            
+                          </div>
+                          
+                          <br>
+                      
+                      <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                      </form>
+                      </div>
+
+                    </div>
                        
                                         
                     
@@ -427,7 +454,7 @@
                 <div id="StockClosing" class="tab-pane ">
 
                     
-                        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-orange rounded shadow-sm">
+                        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-orange rounded shadow-rd">
                             <div class="lh-100">
                                 <h5>Stock Closing</h5>
                             </div>
@@ -436,7 +463,7 @@
                               <small> Address : {{ shop.shop_address}} | Shop Admin : {{ shop.shop_admin.username}} </small>
                           </div>
                         </div>
-                        <div class="my-3 p-3 bg-white rounded shadow-sm">
+                        <div class="my-3 p-3 bg-white rounded shadow-rd">
                         <div class="modal-body closing-box ">
                             <form v-on:submit.prevent="addClosing()" id="cl_frm">
                                 <div class="row">
@@ -453,24 +480,34 @@
                                     </div>
                                
                                     <div class="col">
-                                        <label for="category_id">category ID</label>
+                                        <label for="category_id">Category</label>
                                         <select v-model.number="newClosing.category_id" name="newClosing.category_id" class="form-control" @change="getBrands()">
                                         <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
                                         </select>
                                     </div>
-                                    <div class="col">
-                                        <label for="brand_id">Brand ID</label>
+                                    <div class="col border-right gray">
+                                        <label for="brand_id">Brand</label>
                                 
                                         <select v-model.number="newClosing.brand_id" name="newClosing.brand_id"
                                         class="form-control" @change="getShiftData()">
                                         <option  v-for="brand in brands" :value="brand.brand_id">${brand.brand_name}</option>
                                         </select>
                                     </div>
-
-                                    
-
-                            
-
+                                    <div class="">
+                                        <div class="col">
+                                            <label for="invoice_brand_code">Brand Code</label>
+                                            <input
+                                            type="text"
+                                            id="brand_code"
+                                            class="form-control"
+                                            v-model.number="newInvoice.brand_code" 
+                                            name="newInvoice.brand_code"
+                                            placeholder="Enter Brand Code"
+                                            required="required"
+                                            value=""
+                                            rows="3" @change="getRatesb()">
+                                        </div>
+                                    </div>
 
                                         </li>
                                       </ul> 
@@ -479,34 +516,26 @@
                                       
                                 </div>
                                 <hr>
-                                <br>
+                                
                                 <div class="row">
-                                    <div class="col">
-                                      <!-- <ul> Q
-                                        <li  v-for="size in brandsSize">${size.quantity_name}</li>
-                                      </ul> -->
-                                    </div>
-                                    <div class="col" >
-                                        
-                                    
-                                      </div>
+                                   
 
                                  
 
                                  
 
-
-                                          <table class="table table-bordered">
+                                      <div class="table-responsive">
+                                          <table class="table table-hover">
                                               <thead>
                                                   <tr>
-                                                      <th scope="col"></th>                          
+                                                      <th scope="col">Qty</th>                          
                                                       <th scope="col">Opening</th>
-                                                      <th scope="col">Reciepts (Stock Entry)</th>                           
+                                                      <th scope="col">Reciepts</th>                           
                                                       <th scope="col">Given</th> 
                                                       <th scope="col">Taken </th> 
-                                                      <th scope="col">Closing (case)</th> 
-                                                      <th scope="col">Sold (O+R+T)-(G)-(C)</th>
-                                                      <th scope="col">Total (Sold X brand.brand_q_sale)</th>  
+                                                      <th scope="col">Closing</th> 
+                                                      <th scope="col">Sold</th>
+                                                      <th scope="col">Total</th>  
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -574,6 +603,7 @@
                                             
     
                                           </table>
+                                </div>
                                 </div>
                             
                             <div class="modal-footer">
@@ -734,7 +764,7 @@
         },
         getRatesb: function (){
           let api_url = '/api/brand/';
-          api_url = `/api/brand/${this.newInvoice.brand_id}`;
+          api_url = `/api/brand/${this.newInvoice.brand_code}`;
           this.loading = true;
           this.$http.get(api_url)
               .then((response) => {
@@ -757,7 +787,7 @@
                 if (err.status == 404) {
                   this.loading = false;
                   this.serverError= true;
-                  this.msg = "You have  enterd the invalid Brand ID ";
+                  this.msg = "You have  enterd the invalid Brand Code ";
                   alert("404 :"+this.msg);
                 }
               }
@@ -831,7 +861,8 @@
         addInvoice: function() {
             var local = new Date();
             dt = local.toJSON().slice(0,10);
-            this.newInvoice['shop_id'] = {{shop.shop_id}} ;
+            let sid = {{shop.shop_id}}
+            this.newInvoice['shop_id'] = sid ;
 
             this.newInvoice['invoice_date'] = dt;
             this.loading = true;
@@ -1077,7 +1108,7 @@ var myStockShift =  new Vue({
             },
         
         addClosing: function() {
-          this.newClosing['close_shop_id'] = {{shop.shop_id}} ;
+          this.newClosing['close_shop_id'] = {{ shop.shop_id }} ;
           this.loading = true;
           this.$http.post(`/api/close/`,this.newClosing)
           .then((response) => {

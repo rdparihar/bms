@@ -1,31 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>BMS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% load static %}
+{% include 'head.html' %}
 
-  {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+<body class="bg-light">
+    {% include 'topnavbar.html' %}
+      
+{% if user.is_authenticated %}
+          <main role="main" class="container">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-rd">
+                  <div class="lh-100">
+                    <h5 class="mb-0 text-white lh-100">Quantities </h5>
+                    <small>List of quantities</small>
+                  </div>
+              </div>
+              
+                <div class="my-3 p-3 bg-white rounded shadow-rd">
+                 
 
-  </head>
 
-  <body>
-      {% include 'topnavbar.html' %}
-      {% if user.is_authenticated %}
-      <div class="container-fluid">
-        <div class="row">
-
-          {% include 'sidenavbar.html' %}
-              <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                      {% block page_nav %}
-                          <ul class="nav nav-pills ">
-                            <h3>List of Quantities</h3>
-                            </ul>{% endblock %}
-                      {% block content %}
+              
                       
                       <div id="starting">
                           <div class="container">
@@ -38,6 +32,7 @@
                                 <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
                                 <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getQuantities()">Search</button>
                               </div>
+                              <div class="table-responsive">
                               <table class="table">
                                 <thead>
                                   <tr>
@@ -53,12 +48,13 @@
                                     
                                     <td>${quantity.quantity_bottles}</td>
                                     <td>
-                                      <button class="btn btn-info" v-on:click="getQuantity(quantity.quantity_name)">Edit</button>
-                                      <button class="btn btn-danger" v-on:click="deleteQuantity(quantity.quantity_name)">Delete</button>
+                                      <button class="btn btn-outline-primary" v-on:click="getQuantity(quantity.quantity_name)">Edit</button>
+                                      <button class="btn btn-outline-danger" v-on:click="deleteQuantity(quantity.quantity_name)">Delete</button>
                                     </td>
                                   </tr>
                                 </tbody>
                               </table>
+                            </div>
                               <!-- Add Quantity Modal -->
                               <div class="modal fade" id="addQuantityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -155,16 +151,15 @@
                           <div class="loading" v-if="loading===true">Loading&#8230;</div>
                     
                         </div>
-                      {% endblock %}
                   </main>
 
+                  {% else%}
+                  <div class="bg-white card my-3 p-3 rounded shadow container border-0 ">
+                      <a href="{% url 'login'%}">Click here to login</a>
+                  </div> 
+                  {% endif %}  
 
 
-
-            </div>
-      </div>
-    
-{% endif %}
   <!-- bootrtap js files -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -238,7 +233,7 @@
         },
         updateQuantity: function() {
           this.loading = true;
-          this.$http.put(`/api/quantity/${this.currentQuantity.quantity_id}/`, this.currentQuantity)
+          this.$http.put(`/api/quantity/${this.currentQuantity.quantity_name}/`, this.currentQuantity)
               .then((response) => {
                 this.loading = false;
                 this.currentQuantity = response.data;

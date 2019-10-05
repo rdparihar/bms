@@ -8,43 +8,41 @@
       
 {% if user.is_authenticated %}
           <main role="main" class="container">
-              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-rd">
                   <div class="lh-100">
                     <h5 class="mb-0 text-white lh-100">Brands</h5>
                     <small>List of brands</small>
                   </div>
               </div>
               
-                <div class="my-3 p-3 bg-white rounded shadow-sm">
+                
                   <div id="starting">
-
-
+                    <div class="mt-3  p-3 bg-white rounded shadow-rd">
                       <div class="row pt-2 mt-0 pb-2 mb-0">
-                          <div class="col">
+                        <div class="col">
                           <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBrandModal">
-                              <i class="fas fa-plus"></i>   New Brand</button></h2>
-                          </div>
-                          <div class="col">
-                            <div class="row form-inline ">
-                                <input class="form-control mr-sm-2" type="text" placeholder="Search by Brand Name / cat id" v-model="search_term" aria-label="Search">
-                              <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getBrands()">Search</button>
-                            
-                            </div>
-                             
+                           <i class="fas fa-plus"></i>   New Brand</button></h2>
+                        </div>
+                        <div class="col">
+                          <div class="row form-inline ">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Search by Brand Name / cat id" v-model="search_term" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getBrands()">Search</button>
                           </div>
                         </div>
-                          
+                      </div>
+                    </div>
+
+                    <div class="my-1 p-3 bg-white rounded shadow-rd">
 
                       <div class="table-responsive">
                           <table class="table  table-hover">
                             <thead>
                               <tr>
                                 <th></th>
-                                <th scope="col">name</th>
+                                <th scope="col">Name</th>
                                 
-                                <th scope="col">description</th>
                                 <th scope="col">Category </th>
-                                <th scope="col">Code </th>
+                                <th scope="col">Code</th>
 
                                 <!-- <th scope="col">p_cost</th>
                                 <th scope="col">q_cost</th>
@@ -68,9 +66,8 @@
                               <tr v-for="brand in brands">
                                 <th scope="row"></th>
                                 <td>${brand.brand_name}</td>
-                                <td>${brand.brand_description}</td>
                                 <td>${brand.category_id.category_name}</td>
-                                <td></td>
+                                <td>${brand.brand_code}</td>
                                 <!-- <td>${brand.brand_p_cost}</td>
                                 <td>${brand.brand_q_cost}</td>
                                 <td>${brand.brand_n_cost}</td>
@@ -101,7 +98,7 @@
                     
                       <!-- Add Brand Modal -->
                       <div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                          <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">Create a Brand</h5>
@@ -111,177 +108,224 @@
                               </div>
                               <form v-on:submit.prevent="addBrand()">
                               <div class="modal-body">
-                                  <div class="form-group">
-                                    <label for="brand_name">Brand Name</label>
-                                    
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_name"
-                                      placeholder="Enter Brand Name"
-                                      v-model="newBrand.brand_name"
-                                      required="required" >
+                                <div class="row">
+                                  <div class="col">
+                                      <div class="form-group">
+                                          <label for="brand_code">Brand Code</label>
+                                          
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="brand_code"
+                                            placeholder="Code"
+                                            v-model="newBrand.brand_code"
+                                            required="required" >
+                                        </div>
+
                                   </div>
-                                  <div class="form-group">
-                                    <label for="brand_description">Brand Description</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_description"
-                                      placeholder="Enter Brand Description"
-                                      v-model="newBrand.brand_description"
-                                      required="required" >
+                                  <div class="col">
+                                      <div class="form-group">
+                                          <label for="brand_name">Brand Name</label>
+                                          
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="brand_name"
+                                            placeholder="Name"
+                                            v-model="newBrand.brand_name"
+                                            required="required" >
+                                        </div>
+
                                   </div>
-                  
-                                  <div class="form-group">
-                                    <div class="">
-                                          <label for="category_id">category ID</label>
-                                          <select v-model.number="newBrand.category_id" name="newBrand.category_id" class="form-control" >
+                                  <div class="col">
+                                      <div class="form-group">
+                                        <label for="category_id">Category </label>
+                                        <select v-model.number="newBrand.category_id" name="newBrand.category_id" class="form-control" >
                                           <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
-                                          </select>
-                                          </div>
-                                   
+                                        </select>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="row mx-auto  border-bottom gray my-2">
+                                  <div class="col-3">
+                                    <h5>Qty.</h5>
                                   </div>
-                                  <div class="form-group">
-                                    <label for="brand_p_cost">Brand p cost</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_p_cost"
-                                      placeholder="Enter Brand p cost"
-                                      v-model="newBrand.brand_p_cost"
-                                      required="required" >
+                                  <div class="col">
+                                      <h5>Cost</h5>
                                   </div>
-                                  <div class="form-group">
-                                    <label for="brand_q_cost">Q Cost</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_q_cost"
-                                      placeholder="Enter Brand Q cost"
-                                      v-model="newBrand.brand_q_cost"
-                                      required="required" >
+                                  <div class="col">
+                                      <h5>Sale</h5>
+                                  </div>                                
+                                </div>
+
+                                <div class="row mx-auto  ">
+                                  <div class="col-2">
+                                     <strong>XG</strong> 
                                   </div>
-                                  <div class="form-group">
-                                    <label for="brand_n_cost">Brand  N cost</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_n_cost"
-                                      placeholder="Enter Brand n cost"
-                                      v-model="newBrand.brand_n_cost"
-                                      required="required" >
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="brand_d_cost">Brand D cost</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_d_cost"
-                                      placeholder="Enter Brand D cost"
-                                      v-model="newBrand.brand_d_cost"
-                                      required="required" >
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="brand_l_cost">Brand L cost</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_l_cost"
-                                      placeholder="Enter Brand L cost"
-                                      v-model="newBrand.brand_l_cost"
-                                      required="required" >
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="brand_xg_cost">Brand XG cost</label>
-                                    <input
+                                  <div class="col">
+                                      <input
                                       type="text"
                                       class="form-control"
                                       id="brand_xg_cost"
-                                      placeholder="Enter BrandXGcost"
+                                      placeholder="XG Cost"
                                       v-model="newBrand.brand_xg_cost"
                                       required="required" >
+                                  
+
                                   </div>
-                                  <div class="form-group">
-                                    <label for="brand_y_cost">Brand Y cost</label>
-                                    <input
+                                  <div class="col">                                                                               
+                                          <input
+                                            type="text"
+                                            class="form-control"
+                                            id="brand_xg_sale"
+                                            placeholder="XG Sale"
+                                            v-model="newBrand.brand_xg_sale"
+                                            required="required" >
+                
+                                  </div>
+                                </div>
+                                <div class="row mx-auto ">
+                                  <div class="col-2">
+                                    <strong>L</strong>
+
+                                  </div>
+                                  <div class="col">
+                                      <input
                                       type="text"
                                       class="form-control"
-                                      id="brand_y_cost"
-                                      placeholder="Enter Brand Y cost"
-                                      v-model="newBrand.brand_y_cost"
+                                      id="brand_l_cost"
+                                      placeholder=" L Cost"
+                                      v-model="newBrand.brand_l_cost"
                                       required="required" >
                                   </div>
-                                  <div class="form-group">
-                                    <label for="brand_p_sale">Brand P Sale</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_p_sale"
-                                      placeholder="Enter Brand p Sale"
-                                      v-model="newBrand.brand_p_sale"
-                                      required="required" >
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="brand_q_sale">Brand Q Sale</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_q_sale"
-                                      placeholder="Enter Brand Q Sale"
-                                      v-model="newBrand.brand_q_sale"
-                                      required="required" >
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="brand_n_sale">Brand n Sale</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_n_sale"
-                                      placeholder="Enter Brand n Sale"
-                                      v-model="newBrand.brand_n_sale"
-                                      required="required" >
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="brand_d_sale">Brand D Sale</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="brand_d_sale"
-                                      placeholder="Enter Brand D Sale"
-                                      v-model="newBrand.brand_d_sale"
-                                      required="required" >
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="brand_l_sale">Brand L Sale</label>
-                                    <input
+                                  <div class="col">
+                                      <input
                                       type="text"
                                       class="form-control"
                                       id="brand_l_sale"
-                                      placeholder="Enter Brand L Sale"
+                                      placeholder=" L Sale"
                                       v-model="newBrand.brand_l_sale"
                                       required="required" >
                                   </div>
-                                  <div class="form-group">
-                                    <label for="brand_xg_sale">Brand XG Sale</label>
+
+                                </div>
+                                <div class="row mx-auto ">
+                                  <div class="col-2"><strong>P</strong></div>
+                                  <div class="col">
                                     <input
+                                    type="text"
+                                    class="form-control"
+                                    id="brand_p_cost"
+                                    placeholder="P Cost"
+                                    v-model="newBrand.brand_p_cost"
+                                    required="required" >
+                                  </div>
+                                  <div class="col">
+                                      <input
                                       type="text"
                                       class="form-control"
-                                      id="brand_xg_sale"
-                                      placeholder="Enter Brand Heading"
-                                      v-model="newBrand.brand_xg_sale"
+                                      id="brand_p_sale"
+                                      placeholder="P Sale"
+                                      v-model="newBrand.brand_p_sale"
                                       required="required" >
                                   </div>
-                        <div class="form-group">
-                                    <label for="brand_y_sale">Brand Y Sale</label>
-                                    <input
+                                </div>
+                              
+                                <div class="row mx-auto ">
+                                  <div class="col-2"><strong>Q</strong></div>
+                                  <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_q_cost"
+                                      placeholder="Q cost"
+                                      v-model="newBrand.brand_q_cost"
+                                      required="required" >
+                                  </div>
+                                  <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_q_sale"
+                                      placeholder="Q Sale"
+                                      v-model="newBrand.brand_q_sale"
+                                      required="required" >
+                                  </div>
+                                </div>
+                                <div class="row mx-auto ">
+                                  <div class="col-2">
+                                    <strong>N</strong>
+                                  </div>
+                                  <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_n_cost"
+                                      placeholder="N Cost"
+                                      v-model="newBrand.brand_n_cost"
+                                      required="required" >
+                                  </div>
+                                  <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_n_sale"
+                                      placeholder="N Sale"
+                                      v-model="newBrand.brand_n_sale"
+                                      required="required" >
+                                  </div>
+                                </div>
+                                <div class="row mx-auto ">
+                                  <div class="col-2"><strong>D</strong></div>
+                                  <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_d_cost"
+                                      placeholder="D Cost"
+                                      v-model="newBrand.brand_d_cost"
+                                      required="required" >
+                                  </div>
+                                  <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_d_sale"
+                                      placeholder="D Sale"
+                                      v-model="newBrand.brand_d_sale"
+                                      required="required" >
+                                  </div>
+                                </div>
+                                <div class="row mx-auto ">
+                                  <div class="col-2"><strong>Y</strong></div>
+                                  <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_y_cost"
+                                      placeholder="Y Cost"
+                                      v-model="newBrand.brand_y_cost"
+                                      required="required" >
+                                  </div>
+                                  <div class="col">
+                                      <input
                                       type="text"
                                       class="form-control"
                                       id="brand_y_sale"
-                                      placeholder="Enter Brand Y Sale"
+                                      placeholder="Y Sale"
                                       v-model="newBrand.brand_y_sale"
                                       required="required" >
                                   </div>
+                                </div>
+
+
+
+
+
+
+
+
+
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
@@ -298,199 +342,228 @@
                         <div class="modal-dialog modal-lg" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLongTitle">EDIT Brand</h5>
+                              <h5 class="modal-title" id="exampleModalLongTitle">Update Brand</h5>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
                             </div>
                             <form v-on:submit.prevent="updateBrand()">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                  <label for="brand_name">Brand Name</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_name"
-                                    placeholder="Enter Brand Name"
-                                    v-model="currentBrand.brand_name"
-                                    required="required" >
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="brand_code">Brand Code</label>
+                                            
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              id="brand_code"
+                                              placeholder="Code"
+                                              v-model="currentBrand.brand_code"
+                                              required="required" >
+                                          </div>
+  
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="brand_name">Brand Name</label>
+                                            
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              id="brand_name"
+                                              placeholder="Name"
+                                              v-model="currentBrand.brand_name"
+                                              required="required" >
+                                          </div>
+  
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                          <label for="category_id">Category </label>
+                                          <select v-model.number="currentBrand.category_id" name="currentBrand.category_id" class="form-control" >
+                                            <option v-for="categ in categories" :value="categ.category_id">${categ.category_name} </option>   
+                                          </select>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <div class="row mx-auto  border-bottom gray my-2">
+                                    <div class="col-3">
+                                      <h5>Qty.</h5>
+                                    </div>
+                                    <div class="col">
+                                        <h5>Cost</h5>
+                                    </div>
+                                    <div class="col">
+                                        <h5>Sale</h5>
+                                    </div>                                
+                                  </div>
+  
+                                  <div class="row mx-auto  ">
+                                    <div class="col-2">
+                                       <strong>XG</strong> 
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_xg_cost"
+                                        placeholder="XG Cost"
+                                        v-model="currentBrand.brand_xg_cost"
+                                        required="required" >
+                                    
+  
+                                    </div>
+                                    <div class="col">                                                                               
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              id="brand_xg_sale"
+                                              placeholder="XG Sale"
+                                              v-model="currentBrand.brand_xg_sale"
+                                              required="required" >
+                  
+                                    </div>
+                                  </div>
+                                  <div class="row mx-auto ">
+                                    <div class="col-2">
+                                      <strong>L</strong>
+  
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_l_cost"
+                                        placeholder=" L Cost"
+                                        v-model="currentBrand.brand_l_cost"
+                                        required="required" >
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_l_sale"
+                                        placeholder=" L Sale"
+                                        v-model="currentBrand.brand_l_sale"
+                                        required="required" >
+                                    </div>
+  
+                                  </div>
+                                  <div class="row mx-auto ">
+                                    <div class="col-2"><strong>P</strong></div>
+                                    <div class="col">
+                                      <input
+                                      type="text"
+                                      class="form-control"
+                                      id="brand_p_cost"
+                                      placeholder="P Cost"
+                                      v-model="currentBrand.brand_p_cost"
+                                      required="required" >
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_p_sale"
+                                        placeholder="P Sale"
+                                        v-model="currentBrand.brand_p_sale"
+                                        required="required" >
+                                    </div>
+                                  </div>
+                                
+                                  <div class="row mx-auto ">
+                                    <div class="col-2"><strong>Q</strong></div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_q_cost"
+                                        placeholder="Q cost"
+                                        v-model="currentBrand.brand_q_cost"
+                                        required="required" >
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_q_sale"
+                                        placeholder="Q Sale"
+                                        v-model="currentBrand.brand_q_sale"
+                                        required="required" >
+                                    </div>
+                                  </div>
+                                  <div class="row mx-auto ">
+                                    <div class="col-2">
+                                      <strong>N</strong>
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_n_cost"
+                                        placeholder="N Cost"
+                                        v-model="currentBrand.brand_n_cost"
+                                        required="required" >
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_n_sale"
+                                        placeholder="N Sale"
+                                        v-model="currentBrand.brand_n_sale"
+                                        required="required" >
+                                    </div>
+                                  </div>
+                                  <div class="row mx-auto ">
+                                    <div class="col-2"><strong>D</strong></div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_d_cost"
+                                        placeholder="D Cost"
+                                        v-model="currentBrand.brand_d_cost"
+                                        required="required" >
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_d_sale"
+                                        placeholder="D Sale"
+                                        v-model="currentBrand.brand_d_sale"
+                                        required="required" >
+                                    </div>
+                                  </div>
+                                  <div class="row mx-auto ">
+                                    <div class="col-2"><strong>Y</strong></div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_y_cost"
+                                        placeholder="Y Cost"
+                                        v-model="currentBrand.brand_y_cost"
+                                        required="required" >
+                                    </div>
+                                    <div class="col">
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="brand_y_sale"
+                                        placeholder="Y Sale"
+                                        v-model="currentBrand.brand_y_sale"
+                                        required="required" >
+                                    </div>
+                                  </div>
                                 </div>
-                                   <div class="form-group">
-                                  <label for="brand_name">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_name"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_name"
-                                    required="required" >
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Save changes</button>
                                 </div>
-                                <div class="form-group">
-                                  <label for="brand_description">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_description"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_description"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="category_id">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="category_id"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.category_id"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_p_cost">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_p_cost"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_p_cost"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_q_cost">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_q_cost"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_q_cost"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_n_cost">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_n_cost"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_n_cost"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_d_cost">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_d_cost"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_d_cost"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_l_cost">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_l_cost"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_l_cost"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_xg_cost">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_xg_cost"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_xg_cost"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_y_cost">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_y_cost"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_y_cost"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_p_sale">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_p_sale"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_p_sale"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_q_sale">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_q_sale"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_q_sale"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_n_sale">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_n_sale"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_n_sale"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_d_sale">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_d_sale"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_d_sale"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_l_sale">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_l_sale"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_l_sale"
-                                    required="required" >
-                                </div>
-                                <div class="form-group">
-                                  <label for="brand_xg_sale">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_xg_sale"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_xg_sale"
-                                    required="required" >
-                                </div>
-                            <div class="form-group">
-                                  <label for="brand_y_sale">Brand Heading</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    id="brand_y_sale"
-                                    placeholder="Enter Brand Heading"
-                                    v-model="currentBrand.brand_y_sale"
-                                    required="required" >
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Close</button>
-                              <button type="submit" class="btn btn-primary" >Save changes</button>
-                            </div>
-                            </form>
+                                </form>
                           </div>
                         </div>
                         <div class="loading" v-if="loading===true">Loading&#8230;</div>
@@ -581,6 +654,7 @@
         },
         addBrand: function() {
           this.loading = true;
+          
           this.$http.post(`/api/brand/`,this.newBrand)
               .then((response) => {
                 this.loading = true;

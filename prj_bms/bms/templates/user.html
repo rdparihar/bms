@@ -10,26 +10,52 @@
 
          
           <main role="main" class="container">
-              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+
+              <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-rd">
                   <div class="lh-100">
+                      <h5 class="mb-0 text-white lh-100">
+                          <a class="btn btn-light" href="{% url 'home' %}" role="button"><i class="fas fa-arrow-circle-left"></i> Back</a></h5>
+
+                    </div>
+                  <div class="lh-100 ml-auto">
                     <h5 class="mb-0 text-white lh-100">Users</h5>
                     <small>List of Users</small>
                   </div>
                 </div>
-              
-                <div class="my-3 p-3 bg-white rounded shadow-sm">
               <div id="starting">
-                  <div class="container">
-                  
-                    <div class="row">
-                      <h1>Users status
-                      </h1>
-                      &emsp;
-                      <div class="form-inline my-2 my-lg-0" style="margin-left: 50%;">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
+                <div class="my-3 p-3 bg-white rounded shadow-rd">
+                    <div class="row pt-2 mt-0 pb-2 mb-0">
+                        <div class="col">
+                            {% if request.session.isAdmin or request.session.isSubAdmin or user.is_superuser %}
+
+                          <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
+                           <i class="fas fa-plus"></i> New User</button></h2>
+                           {% endif %}
+
+                        </div>
+                        <div class="col">
+                          <div class="row form-inline ">
+                              <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
                         <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getUsers()">Search</button>
+                     </div>
+                        </div>
                       </div>
-                      <table class="table">
+
+
+                       
+                          
+                      
+                
+                  
+                   
+                   
+                      
+                </div>
+                <div class="my-3 p-3 bg-white rounded shadow-rd">
+
+
+                      <div class="table-responsive">
+                      <table class="table table-hover">
                         <thead>
                           <tr>
                             <th scope="col">#</th>
@@ -42,18 +68,23 @@
                           <tr v-for="user in users">
                             <th scope="row">${user.id}</th>
                             <td>${user.username}</td>
-                            <td ><span class="badge badge-pill badge-success">Registered </span></td>
+                            <td >
+                                <span class="badge badge-pill badge-success" v-if="user.is_active === true">Active</span>
+                                <span class="badge badge-pill badge-danger"  v-else>Disabled</span></td>
+
+                              
+                              
                          
                             <td class="text-center">
                                     
                                 {% if perms.user.can_delete_user %}
-                                <button class="btn btn-danger" name="newUser.delete" value="{{user.username}}" v-on:click="deleteUser(user.id)">Delete</button>
+                                <button class="btn btn-outline-danger" name="newUser.delete" value="{{user.username}}" v-on:click="deleteUser(user.id)">Delete</button>
                                     {% endif %}
                               </td>
                           </tr>
                         </tbody>
                       </table>
-            
+              </div>
                       <!-- Add User Modal -->
                       <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -199,10 +230,11 @@
                       </div>
                       <!-- End of edit user modal -->
             
-                    </div>
-                  </div>
+                    
+                  
                   <div class="loading" v-if="loading===true">Loading&#8230;</div>
             
+                </div>
                 </div>
           </main>
           {% else%}
